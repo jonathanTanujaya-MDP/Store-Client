@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { API_ENDPOINTS } from '../config/api';
 
 const RestockContext = createContext();
 export const useRestock = () => useContext(RestockContext);
@@ -10,7 +11,7 @@ export const RestockProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const API_URL = 'http://localhost:5000/api/restock';
+  const API_URL = API_ENDPOINTS.restock;
 
   const fetchRestocks = async () => {
     setLoading(true);

@@ -10,6 +10,7 @@ import {
   Legend,
 } from 'chart.js';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 import './DashboardChart.css';
 
 ChartJS.register(
@@ -48,8 +49,8 @@ const DashboardChart = () => {
         
         // Fetch sales and restock data from history
         const [salesResponse, restockResponse] = await Promise.all([
-          axios.get('http://localhost:5000/api/sales'),
-          axios.get('http://localhost:5000/api/restock')
+          axios.get(API_ENDPOINTS.sales),
+          axios.get(API_ENDPOINTS.restock)
         ]);
 
         const salesData = salesResponse.data;

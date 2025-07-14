@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast'; // Import toast
+import { API_ENDPOINTS } from '../config/api';
 
 const TransactionContext = createContext();
 
@@ -11,7 +12,7 @@ export const TransactionProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const API_URL = 'http://localhost:5000/api/transactions'; // Sesuaikan dengan URL backend Anda
+  const API_URL = API_ENDPOINTS.transactions;
 
   const fetchTransactions = async () => {
     setLoading(true);

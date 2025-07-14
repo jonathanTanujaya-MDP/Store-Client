@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 
 const ProductContext = createContext();
 
@@ -10,7 +11,7 @@ export const ProductProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const API_URL = 'http://localhost:5000/api/products'; // Sesuaikan dengan URL backend Anda
+  const API_URL = API_ENDPOINTS.products;
 
   // Realtime update dengan polling setiap 30 detik
   useEffect(() => {

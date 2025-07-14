@@ -9,6 +9,7 @@ import { Package, AlertTriangle, TrendingUp, DollarSign, ShoppingCart, Clock } f
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { formatCurrency } from '../utils/currency.js';
+import { API_ENDPOINTS } from '../config/api';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -27,7 +28,7 @@ const Dashboard = () => {
     const fetchDashboardStats = async () => {
       try {
         // Get sales data
-        const salesResponse = await axios.get('http://localhost:5000/api/sales');
+        const salesResponse = await axios.get(API_ENDPOINTS.sales);
         const sales = salesResponse.data;
         
         // Calculate today's stats
