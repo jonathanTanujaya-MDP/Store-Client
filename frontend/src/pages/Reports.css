@@ -1,0 +1,38 @@
+
+.reports-page {
+    padding: 0; /* Remove extra padding as layout handles it */
+}
+
+.reports-title {
+    font-size: 1.75rem; /* Reduced from 2rem */
+    font-weight: 700;
+    background: linear-gradient(45deg, #2563eb, #3b82f6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem; /* Reduced from 1.5rem */
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    text-align: center; /* Center the title */
+}
+
+@media (max-width: 768px) { /* Tablet */
+    .reports-title {
+        font-size: 1.5rem; /* Further reduced */
+    }
+}
+
+@media (max-width: 480px) { /* Mobile */
+    .reports-title {
+        font-size: 1.25rem; /* Further reduced */
+    }
+}
+
+.reports-subtitle {
+    font-size: 0.875rem; /* Reduced from 1rem */
+    font-weight: 400;
+    color: #6b7280;
+    margin-bottom: 1rem; /* Reduced from 1.5rem */
+    text-align: center; /* Center the subtitle */
+}

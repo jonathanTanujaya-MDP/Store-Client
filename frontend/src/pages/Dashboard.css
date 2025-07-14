@@ -1,0 +1,147 @@
+/* Dashboard page container */
+
+.dashboard-title {
+    font-size: 2rem; /* 32px */
+    font-weight: 700;
+    background: linear-gradient(45deg, #2563eb, #3b82f6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem; /* 24px */
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) { /* Tablet */
+    .dashboard-title {
+        font-size: 1.8rem; /* 10% reduction */
+    }
+}
+
+@media (max-width: 480px) { /* Mobile */
+    .dashboard-title {
+        font-size: 1.6rem; /* 20% reduction */
+    }
+}
+
+.dashboard-subtitle {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+}
+
+.summary-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* grid-cols-1 */
+    gap: 1.5rem; /* gap-6 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+@media (min-width: 768px) {
+    .summary-cards-grid {
+        grid-template-columns: repeat(2, 1fr); /* md:grid-cols-2 */
+    }
+}
+
+@media (min-width: 1024px) {
+    .summary-cards-grid {
+        grid-template-columns: repeat(3, 1fr); /* lg:grid-cols-3 */
+    }
+}
+
+.dashboard-chart-section {
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+/* Recent Sales Activity Styles */
+.recent-activity-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    margin-bottom: 1.5rem;
+}
+
+.recent-activity-section h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.recent-activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.activity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.activity-item:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+.activity-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.activity-customer {
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+.activity-customer strong {
+    font-weight: 600;
+}
+
+.activity-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.activity-amount {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #059669;
+    background: #d1fae5;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.activity-date {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+@media (max-width: 640px) {
+    .activity-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .activity-amount {
+        font-size: 0.8rem;
+    }
+}

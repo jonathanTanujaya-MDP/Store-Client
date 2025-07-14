@@ -1,0 +1,57 @@
+
+.stock-alert-list-container {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.stock-alert-list-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.stock-alert-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.stock-alert-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.stock-alert-item:last-child {
+    border-bottom: none;
+}
+
+.alert-product-name {
+    font-weight: 500;
+    color: #374151;
+}
+
+.alert-stock-info {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.current-stock {
+    color: #EF4444; /* error red */
+    font-weight: bold;
+}
+
+.min-stock {
+    color: #F59E0B; /* warning yellow */
+}
+
+.no-alerts-message {
+    text-align: center;
+    color: #6b7280;
+    padding: 1rem;
+}

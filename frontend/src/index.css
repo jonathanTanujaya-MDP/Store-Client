@@ -1,0 +1,66 @@
+html {
+  font-size: 16px; /* Base font size for rem units */
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(to right, #ece9e6, #ffffff); /* Subtle gradient from light gray to white */
+  min-height: 100vh; /* Ensure gradient covers full height */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Mobile-specific global styles */
+@media (max-width: 768px) {
+  html {
+    font-size: 15px; /* Slightly smaller base font for mobile */
+  }
+
+  body {
+    background: #f3f4f6; /* Simpler background for mobile */
+    overflow-x: hidden; /* Prevent horizontal scroll */
+  }
+
+  /* Improve touch targets for mobile */
+  button, 
+  input[type="button"], 
+  input[type="submit"], 
+  input[type="reset"] {
+    min-height: 44px; /* iOS recommended touch target size */
+    touch-action: manipulation; /* Disable double-tap zoom */
+  }
+
+  /* Better scrolling performance */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent zoom on input focus (iOS) */
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="password"],
+  textarea,
+  select {
+    font-size: 16px !important; /* Prevent zoom on iOS */
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px; /* Even smaller for small phones */
+  }
+
+  /* Compact spacing for small screens */
+  .layout-main-content {
+    padding: 0.5rem !important;
+  }
+}

@@ -1,0 +1,115 @@
+.layout-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f3f4f6; /* bg-gray-100 */
+}
+
+.layout-content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.layout-main-content {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #e5e7eb; /* bg-gray-200 */
+    padding: 1.5rem; /* Ensure padding is here */
+}
+
+.layout-inner-content {
+    max-width: 1200px; /* Keep max-width */
+    margin-left: auto; /* Center again */
+    margin-right: auto; /* Center again */
+}
+
+/* Mobile Menu Toggle Button */
+.mobile-menu-toggle {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    display: none; /* Hidden on desktop */
+}
+
+.mobile-menu-toggle:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mobile-menu-toggle:active {
+    transform: translateY(0);
+}
+
+/* Mobile Overlay */
+.mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none; /* Hidden on desktop */
+}
+
+/* Mobile Responsive Design - Only affects mobile, desktop remains unchanged */
+@media (max-width: 768px) {
+    .layout-container {
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .layout-content-area {
+        flex: 1;
+        overflow: hidden;
+        margin-top: 4rem; /* Space for hamburger button */
+    }
+
+    .layout-main-content {
+        padding: 1rem; /* Reduced padding for mobile */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+
+    .layout-inner-content {
+        max-width: 100%;
+        margin: 0;
+    }
+
+    .mobile-menu-toggle {
+        display: block; /* Show on mobile */
+    }
+
+    .mobile-overlay {
+        display: block; /* Show on mobile when menu is open */
+    }
+}
+
+@media (max-width: 480px) {
+    .layout-main-content {
+        padding: 0.75rem; /* Even more compact for small phones */
+    }
+
+    .mobile-menu-toggle {
+        top: 0.75rem;
+        left: 0.75rem;
+        padding: 0.625rem;
+    }
+
+    .layout-content-area {
+        margin-top: 3.5rem; /* Adjust for smaller button */
+    }
+}

@@ -1,0 +1,40 @@
+.card-container {
+    background-color: #ffffff; /* bg-white */
+    padding: 1.5rem; /* p-6 */
+    border-radius: 0.75rem; /* rounded-xl, slightly more rounded */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* stronger shadow */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* smooth transition */
+}
+
+.card-container:hover {
+    transform: translateY(-5px); /* slight lift on hover */
+    box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.15), 0 6px 8px -3px rgba(0, 0, 0, 0.08); /* even stronger shadow on hover */
+}
+
+.card-title {
+    font-size: 0.95rem; /* slightly larger */
+    font-weight: 600; /* bolder */
+    color: #4b5563; /* darker gray */
+}
+
+.card-value {
+    font-size: 1.8rem; /* larger */
+    font-weight: bold;
+    color: #1a202c; /* even darker gray */
+}
+
+.card-icon-wrapper {
+    background-color: #e0f2fe; /* very light blue */
+    color: #2196f3; /* Material Blue 500 */
+    padding: 1rem; /* slightly larger padding */
+    border-radius: 9999px; /* rounded-full */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* subtle shadow for icon */
+}
+
+.card-icon {
+    width: 1.8rem; /* larger icon */
+    height: 1.8rem; /* larger icon */
+}

@@ -1,0 +1,27 @@
+
+.fab-button {
+    position: fixed;
+    bottom: 2.5rem; /* bottom-10 */
+    right: 2.5rem; /* right-10 */
+    background-color: #3B82F6; /* bg-primary */
+    color: #ffffff; /* text-white */
+    width: 3.5rem; /* w-14 */
+    height: 3.5rem; /* h-14 */
+    border-radius: 9999px; /* rounded-full */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    transition: background-color 0.2s ease-in-out;
+    border: none;
+    cursor: pointer;
+}
+
+.fab-button:hover {
+    background-color: rgba(59, 130, 246, 0.8); /* hover:bg-primary/80 */
+}
+
+.fab-icon {
+    width: 2rem; /* w-8 */
+    height: 2rem; /* h-8 */
+}
