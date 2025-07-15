@@ -1,0 +1,21 @@
+{
+  "name": "Manajemen Stock",
+  "short_name": "Stock Manager",
+  "description": "Sistem Manajemen Stock - Kelola inventori, transaksi, dan laporan dengan mudah",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/database-management.ico",
+      "sizes": "any",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"],
+  "lang": "id",
+  "dir": "ltr"
+}

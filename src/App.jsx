@@ -2,22 +2,24 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { UIScaleProvider } from './context/UIScaleContext.jsx';
-import { ProductProvider } from './context/ProductContext.jsx'; // Assuming this exists
+import { ProductProvider } from './context/ProductContext.jsx';
 import { SalesProvider } from './context/SalesContext.jsx';
 import { RestockProvider } from './context/RestockContext.jsx';
 import Layout from './components/Layout.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Products from './pages/Products.jsx';
-import History from './pages/History.jsx'; // Changed from Transactions
+import History from './pages/History.jsx';
 import Reports from './pages/Reports.jsx';
 import StockAlerts from './pages/StockAlerts.jsx';
 import AddTransaction from './pages/AddTransaction.jsx';
 import Restock from './pages/Restock.jsx';
 import useHotkeys from './hooks/useHotkeys.js';
+import usePageTitle from './hooks/usePageTitle.js';
 
 // Component wrapper untuk hotkeys yang ada di dalam Router context
 function AppContent() {
   useHotkeys(); // Enable global hotkeys
+  usePageTitle(); // Dynamic page titles
   
   return (
     <Layout>

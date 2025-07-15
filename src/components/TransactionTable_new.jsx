@@ -21,8 +21,7 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
     }
     
     return transactions.filter(transaction => {
-      const type = transaction.transaction_type;
-      return type === activeFilter;
+      return transaction.transaction_type === activeFilter;
     });
   }, [transactions, activeFilter]);
 
@@ -41,55 +40,32 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
       {
         accessorKey: 'transaction_id',
         header: () => 'ID',
-        cell: info => info.getValue() || info.row.original.id || 'N/A',
+        cell: info => info.getValue(),
       },
       {
         accessorKey: 'transaction_date',
-        header: () => 'Tanggal',
-        cell: info => {
-          const date = info.getValue() || info.row.original.created_at || info.row.original.date;
-          return date ? new Date(date).toLocaleDateString('id-ID') : 'N/A';
-        },
+        header: () => 'Date',
+        cell: info => new Date(info.getValue()).toLocaleDateString(),
       },
       {
         accessorKey: 'transaction_type',
-        header: () => 'Tipe',
-        cell: info => {
-          const type = info.getValue();
-          return type === 'restock' ? 'Restock' : type === 'sales' ? 'Penjualan' : type || 'N/A';
-        },
+        header: () => 'Type',
+        cell: info => info.getValue(),
       },
       {
         accessorKey: 'customer_name',
         header: () => 'Customer',
-        cell: info => {
-          const customer = info.getValue() || info.row.original.customer;
-          return customer || (info.row.original.transaction_type === 'restock' ? 'Supplier' : '-');
-        },
+        cell: info => info.getValue() || '-',
       },
       {
         accessorKey: 'total_amount',
-        header: () => 'Total',
-        cell: info => {
-          const amount = info.getValue() || info.row.original.total || 0;
-          return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-          }).format(amount);
-        },
+        header: () => 'Amount',
+        cell: info => `$${parseFloat(info.getValue()).toFixed(2)}`,
       },
       {
         accessorKey: 'total_profit',
         header: () => 'Profit',
-        cell: info => {
-          const profit = info.getValue() || info.row.original.profit || 0;
-          return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-          }).format(profit);
-        },
+        cell: info => `$${parseFloat(info.getValue()).toFixed(2)}`,
       },
       {
         id: 'actions',
@@ -97,11 +73,12 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
         cell: (info) => (
           <div className="table-actions">
             <button 
-              className="view-btn"
+              className="table-action-button view-button"
               onClick={() => handleViewTransaction(info.row.original)}
-              title="Lihat Detail"
+              title="Lihat Detail Transaksi"
             >
-              <Eye size={14} />
+              <Eye size={16} />
+              <span>Lihat</span>
             </button>
           </div>
         ),
@@ -130,20 +107,14 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
 
   return (
     <div className="transaction-table-container">
-      <div className="table-header">
-        <div className="search-container">
-          <input
-            type="text"
-            value={globalFilter ?? ''}
-            onChange={e => setGlobalFilter(e.target.value)}
-            placeholder="Cari transaksi..."
-            className="search-input"
-          />
-        </div>
-      </div>
-      
-      <div className="table-wrapper">
-        <table className="transaction-table">
+      <input
+        type="text"
+        value={globalFilter ?? ''}
+        onChange={e => setGlobalFilter(e.target.value)}
+        placeholder="Search all columns..."
+        className="global-filter-input"
+      />
+      <table className="transaction-table">
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
@@ -192,9 +163,8 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
               </td>
             </tr>
           )}
-        </tbody>        </table>
-      </div>
-      
+        </tbody>
+      </table>
       <div className="pagination-controls">
         <button
           onClick={() => table.setPageIndex(0)}
