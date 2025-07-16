@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useReactTable, getCoreRowModel, flexRender, getPaginationRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table';
 import { useTransactions } from '../context/TransactionContext.jsx';
-import { Eye } from 'lucide-react';
+import { Eye, Search, AlertCircle, RefreshCw, Database } from 'lucide-react';
 import TransactionDetailModal from './TransactionDetailModal.jsx';
 import './TransactionTable.css';
 
@@ -11,6 +11,53 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
   const [globalFilter, setGlobalFilter] = useState('');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Loading component with skeleton
+  const LoadingSkeleton = () => (
+    <div className="transaction-table-container">
+      <div className="table-header">
+        <div className="search-container">
+          <div className="search-skeleton"></div>
+        </div>
+      </div>
+      <div className="table-wrapper">
+        <div className="skeleton-table">
+          <div className="skeleton-header">
+            {[...Array(7)].map((_, i) => (
+              <div key={i} className="skeleton-header-cell"></div>
+            ))}
+          </div>
+          {[...Array(5)].map((_, rowIndex) => (
+            <div key={rowIndex} className="skeleton-row">
+              {[...Array(7)].map((_, cellIndex) => (
+                <div key={cellIndex} className="skeleton-cell"></div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Error component with retry functionality
+  const ErrorState = ({ error, onRetry }) => (
+    <div className="transaction-table-container">
+      <div className="error-state">
+        <div className="error-content">
+          <AlertCircle size={48} className="error-icon" />
+          <h3>Oops! Terjadi Kesalahan</h3>
+          <p>Gagal memuat data transaksi. Silakan coba lagi.</p>
+          <div className="error-details">
+            <small>{error}</small>
+          </div>
+          <button className="retry-btn" onClick={onRetry}>
+            <RefreshCw size={16} />
+            Coba Lagi
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   // Filter transactions based on active filter
   const filteredTransactions = useMemo(() => {
@@ -22,7 +69,19 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
     
     return transactions.filter(transaction => {
       const type = transaction.transaction_type;
-      return type === activeFilter;
+      // Handle both uppercase (SALE, RESTOCK) and lowercase (sales, restock)
+      const normalizedType = type?.toLowerCase();
+      const normalizedFilter = activeFilter?.toLowerCase();
+      
+      // Map filter values to match backend format
+      if (normalizedFilter === 'sales' || normalizedFilter === 'sale') {
+        return normalizedType === 'sale';
+      }
+      if (normalizedFilter === 'restock') {
+        return normalizedType === 'restock';
+      }
+      
+      return normalizedType === normalizedFilter;
     });
   }, [transactions, activeFilter]);
 
@@ -56,7 +115,11 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
         header: () => 'Tipe',
         cell: info => {
           const type = info.getValue();
-          return type === 'restock' ? 'Restock' : type === 'sales' ? 'Penjualan' : type || 'N/A';
+          return (
+            <span className={`transaction-badge ${type}`}>
+              {type === 'restock' ? 'Restock' : type === 'sales' ? 'Penjualan' : type || 'N/A'}
+            </span>
+          );
         },
       },
       {
@@ -98,7 +161,10 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
           <div className="table-actions">
             <button 
               className="view-btn"
-              onClick={() => handleViewTransaction(info.row.original)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleViewTransaction(info.row.original);
+              }}
               title="Lihat Detail"
             >
               <Eye size={14} />
@@ -125,20 +191,23 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  if (loading) return <p>Loading transactions...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <LoadingSkeleton />;
+  if (error) return <ErrorState error={error} onRetry={() => window.location.reload()} />;
 
   return (
     <div className="transaction-table-container">
       <div className="table-header">
         <div className="search-container">
-          <input
-            type="text"
-            value={globalFilter ?? ''}
-            onChange={e => setGlobalFilter(e.target.value)}
-            placeholder="Cari transaksi..."
-            className="search-input"
-          />
+          <div className="search-input-wrapper">
+            <Search size={20} className="search-icon" />
+            <input
+              type="text"
+              value={globalFilter ?? ''}
+              onChange={e => setGlobalFilter(e.target.value)}
+              placeholder="Cari transaksi..."
+              className="search-input"
+            />
+          </div>
         </div>
       </div>
       
@@ -174,7 +243,10 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
         <tbody>
           {table.getRowModel().rows.length > 0 ? (
             table.getRowModel().rows.map(row => (
-              <tr key={row.id}>
+              <tr 
+                key={row.id}
+                className="table-row"
+              >
                 {row.getVisibleCells().map(cell => (
                   <td 
                     key={cell.id}
@@ -187,8 +259,12 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={columns.length} style={{ textAlign: 'center', padding: '1rem' }}>
-                No transactions found.
+              <td colSpan={columns.length} className="empty-state">
+                <div className="empty-content">
+                  <Database size={48} className="empty-icon" />
+                  <h3>Tidak Ada Transaksi</h3>
+                  <p>Tidak ada transaksi yang cocok dengan pencarian Anda.</p>
+                </div>
               </td>
             </tr>
           )}

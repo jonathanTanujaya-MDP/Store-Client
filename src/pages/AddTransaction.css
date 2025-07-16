@@ -1,49 +1,386 @@
 .add-transaction-page {
+    padding: 0;
+}
+
+.add-transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    border-radius: 1rem;
+    color: white;
+}
+
+.add-transaction-title-section {
+    flex: 1;
+}
+
+.add-transaction-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: white;
+}
+
+.add-transaction-subtitle {
+    font-size: 1.125rem;
+    margin: 0;
+    opacity: 0.9;
+    font-weight: 400;
+    color: white;
+}
+
+.transaction-summary {
+    display: flex;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    backdrop-filter: blur(10px);
+}
+
+.summary-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 100px;
+}
+
+.summary-label {
+    font-size: 0.75rem;
+    color: white;
+    opacity: 0.8;
+    margin-bottom: 0.25rem;
+}
+
+.summary-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
+}
+
+.transaction-form {
     background-color: #ffffff;
     padding: 2rem;
     border-radius: 0.75rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    max-width: 900px; /* Increased for multiple items */
+    max-width: 900px;
     margin: 0 auto;
 }
 
-/* Removed @media (max-width: 480px) for .add-transaction-page padding */
-
-.add-transaction-title {
-    font-size: 2rem; /* 32px */
-    font-weight: 700;
-    background: linear-gradient(45deg, #2563eb, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 1.5rem; /* 24px */
-    letter-spacing: 0.5px;
-    line-height: 1.2;
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+/* Customer Section */
+.customer-section {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-@media (max-width: 768px) { /* Tablet */
-    .add-transaction-title {
-        font-size: 1.8rem; /* 10% reduction */
-    }
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
 }
 
-@media (max-width: 480px) { /* Mobile */
-    .add-transaction-title {
-        font-size: 1.6rem; /* 20% reduction */
-    }
+.items-count {
+    margin-left: auto;
+    font-size: 0.875rem;
+    color: #64748b;
+    background: #e2e8f0;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
 }
 
-.add-transaction-subtitle {
-    font-size: 0.875rem; /* 14px regular */
-    font-weight: 400;
-    color: #6b7280;
+.customer-input {
+    font-size: 1rem;
+    height: 3rem;
+}
+
+/* Item Cards */
+.item-card {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
     margin-bottom: 1.5rem;
-    text-align: center;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.transaction-form .form-group {
-    margin-bottom: 1.25rem; /* 20px spacing */
+.item-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-1px);
+}
+
+.item-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.item-number-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #475569;
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.remove-item-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.remove-item-btn:hover {
+    background-color: #dc2626;
+    transform: scale(1.05);
+}
+
+.item-card-content {
+    padding: 1.5rem;
+}
+
+/* Product Search Section */
+.product-search-section {
+    margin-bottom: 1.5rem;
+}
+
+.product-search-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.product-search-input {
+    font-size: 1rem;
+    height: 3rem;
+}
+
+.product-search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background-color: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-top: 4px;
+}
+
+.product-search-results li {
+    padding: 0;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.2s;
+}
+
+.product-search-results li:hover {
+    background-color: #f8fafc;
+}
+
+.product-search-results li:last-child {
+    border-bottom: none;
+}
+
+.product-item {
+    padding: 1rem;
+}
+
+.product-name {
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.product-details {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.selected-product-card {
+    margin-top: 0.75rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+}
+
+.product-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.product-name-selected {
+    font-weight: 600;
+    color: #166534;
+}
+
+.product-price {
+    font-weight: 600;
+    color: #059669;
+    font-size: 1.125rem;
+}
+
+.product-stock-info {
+    font-size: 0.875rem;
+    color: #065f46;
+}
+
+.stock-count {
+    font-weight: 600;
+    color: #047857;
+}
+
+/* Quantity and Total Section */
+.quantity-total-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.quantity-section, .subtotal-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.quantity-section label, .subtotal-section label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.subtotal-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #059669;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    min-height: 3rem;
+    box-sizing: border-box;
+}
+
+/* Add Item Section */
+.add-item-section {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+}
+
+.add-item-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.add-item-btn:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Total Summary Section */
+.total-summary-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+.total-row {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    background: white;
+    margin: 0 -1.5rem -1.5rem -1.5rem;
+    padding: 1rem 1.5rem;
+    border-radius: 0 0 12px 12px;
+}
+
+.summary-label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.summary-value {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.total-row .summary-value {
+    color: #059669;
+    font-size: 1.5rem;
 }
 
 .transaction-form label {
@@ -496,14 +833,27 @@
         border-radius: 0.5rem;
     }
 
+    .add-transaction-header {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
     .add-transaction-title {
-        font-size: 1.8rem;
-        margin-bottom: 1.25rem;
+        font-size: 1.875rem;
     }
 
     .add-transaction-subtitle {
-        font-size: 0.875rem;
-        margin-bottom: 1.25rem;
+        font-size: 1rem;
+    }
+
+    .transaction-summary {
+        padding: 1rem;
+        justify-content: center;
+    }
+
+    .summary-card {
+        min-width: 80px;
     }
 
     .customer-info-section {
@@ -621,62 +971,119 @@
     }
 
     .add-transaction-title {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         margin-bottom: 1rem;
     }
 
-    .customer-info-section {
+    .transaction-summary {
+        gap: 0.75rem;
+    }
+
+    .summary-value {
+        font-size: 1rem;
+    }
+
+    .transaction-form {
+        padding: 1rem;
+        border-radius: 0.375rem;
+    }
+}
+
+/* Enhanced Mobile Responsive for New Design */
+@media (max-width: 768px) {
+    .customer-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .items-count {
+        margin-left: 0;
+        align-self: flex-start;
+    }
+
+    .item-card-header {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+
+    .item-number-badge {
+        justify-content: center;
+    }
+
+    .item-card-content {
+        padding: 1rem;
+    }
+
+    .quantity-total-section {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .add-item-section {
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .total-summary-section {
+        padding: 1rem;
+        margin: 1.5rem 0;
+    }
+
+    .total-row {
+        margin: 0 -1rem -1rem -1rem;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .customer-section {
         padding: 0.75rem;
         margin-bottom: 1rem;
     }
 
-    .section-header h3 {
-        font-size: 0.9375rem;
+    .item-card {
+        margin-bottom: 1rem;
+    }
+
+    .item-card-header {
+        padding: 0.75rem;
+    }
+
+    .item-card-content {
+        padding: 0.75rem;
+    }
+
+    .add-item-section {
+        padding: 1rem;
+        margin: 1rem 0;
     }
 
     .add-item-btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.8125rem;
-    }
-
-    .item-row {
-        padding: 0.625rem;
-    }
-
-    .item-fields {
-        gap: 0.75rem;
-    }
-
-    .quantity-input-group .form-input.quantity-input,
-    .transaction-form .form-input {
-        height: 2.5rem;
-        padding: 0.625rem 0.875rem;
-        font-size: 0.9375rem;
-    }
-
-    .quantity-button {
-        height: 2.5rem;
-        padding: 0.625rem 0.875rem;
-        font-size: 0.8125rem;
-    }
-
-    .submit-button {
-        height: 3rem;
-        font-size: 1rem;
         padding: 0.625rem 1.25rem;
-    }
-
-    .transaction-summary {
-        padding: 0.875rem;
-        margin: 0.875rem 0;
-    }
-
-    .summary-row {
-        padding: 0.375rem 0;
         font-size: 0.875rem;
     }
 
-    .summary-total {
-        font-size: 1rem;
+    .total-summary-section {
+        padding: 0.75rem;
+        margin: 1rem 0;
+    }
+
+    .total-row {
+        font-size: 1.125rem;
+        margin: 0 -0.75rem -0.75rem -0.75rem;
+        padding: 0.75rem;
+    }
+
+    .total-row .summary-value {
+        font-size: 1.25rem;
     }
 }

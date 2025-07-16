@@ -3,7 +3,7 @@ import { useProducts } from '../context/ProductContext.jsx';
 import axios from 'axios';
 import { useSales } from '../context/SalesContext.jsx';
 import toast from 'react-hot-toast';
-import { Search, Package, User, Calendar, DollarSign, CheckCircle, XCircle, Loader, Minus, Plus, X, ShoppingCart } from 'lucide-react';
+import { Search, Package, User, Calendar, DollarSign, CheckCircle, XCircle, Loader, Minus, Plus, X, ShoppingCart, AlertTriangle } from 'lucide-react';
 import { formatCurrency } from '../utils/currency.js';
 import './AddTransaction.css';
 
@@ -154,92 +154,133 @@ const AddTransaction = () => {
 
   return (
     <div className="add-transaction-page">
-      <h1 className="add-transaction-title">Add New Transaction</h1>
-      <p className="add-transaction-subtitle">Record your product sales efficiently</p>
+      <div className="add-transaction-header">
+        <div className="add-transaction-title-section">
+          <h1 className="add-transaction-title">
+            <ShoppingCart size={32} />
+            Add New Transaction
+          </h1>
+          <p className="add-transaction-subtitle">
+            Record your product sales efficiently
+          </p>
+        </div>
+        
+        <div className="transaction-summary">
+          <div className="summary-card">
+            <div className="summary-label">Total Items</div>
+            <div className="summary-value">{items.filter(item => item.product).length}</div>
+          </div>
+          <div className="summary-card">
+            <div className="summary-label">Total Amount</div>
+            <div className="summary-value">{formatCurrency(totalAmount)}</div>
+          </div>
+        </div>
+      </div>
       
       <form onSubmit={handleSubmit} className="transaction-form">
-        {/* Customer Information */}
-        <div className="form-group">
-          <label htmlFor="customerName">Customer Name <span className="required-indicator">*</span></label>
-          <div className="input-with-icon">
-            <User className="input-icon" />
-            <input
-              id="customerName"
-              type="text"
-              className="form-input"
-              placeholder="Enter customer name"
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-              required
-            />
+        {/* Customer Information Section */}
+        <div className="customer-section">
+          <div className="section-title">
+            <User size={20} />
+            <span>Customer Information</span>
+          </div>
+          <div className="form-group">
+            <label htmlFor="customerName">Customer Name <span className="required-indicator">*</span></label>
+            <div className="input-with-icon">
+              <User className="input-icon" />
+              <input
+                id="customerName"
+                type="text"
+                className="form-input customer-input"
+                placeholder="Enter customer name"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                required
+              />
+            </div>
           </div>
         </div>
 
         {/* Items Section */}
         <div className="items-section">
-          <div className="section-header">
-            <h3><ShoppingCart size={20} /> Transaction Items</h3>
+          <div className="section-title">
+            <ShoppingCart size={20} />
+            <span>Transaction Items</span>
+            <div className="items-count">
+              {items.filter(item => item.product).length} item{items.filter(item => item.product).length !== 1 ? 's' : ''} selected
+            </div>
           </div>
 
           {items.map((item, index) => (
-            <div key={index} className="item-container">
-              <div className="item-row">
-                {/* Remove item button - top right */}
-                <div className="item-header">
-                  {items.length > 1 && (
-                    <button 
-                      type="button" 
-                      onClick={() => removeItem(index)}
-                      className="remove-item-btn"
-                      title="Remove this item"
-                    >
-                      <X size={16} />
-                    </button>
+            <div key={index} className="item-card">
+              <div className="item-card-header">
+                <div className="item-number-badge">
+                  <Package size={16} />
+                  Item {index + 1}
+                </div>
+                {items.length > 1 && (
+                  <button 
+                    type="button" 
+                    onClick={() => removeItem(index)}
+                    className="remove-item-btn"
+                    title="Remove this item"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+
+              <div className="item-card-content">
+                {/* Product Search */}
+                <div className="product-search-section">
+                  <label>Select Product <span className="required-indicator">*</span></label>
+                  <div className="input-with-icon">
+                    <Search className="input-icon" />
+                    <input
+                      type="text"
+                      className="form-input product-search-input"
+                      placeholder="Search for a product..."
+                      value={item.searchTerm}
+                      onChange={(e) => handleSearchChange(e.target.value, index)}
+                    />
+                  </div>
+                  {item.filteredProducts.length > 0 && item.searchTerm && (
+                    <ul className="product-search-results">
+                      {item.filteredProducts.map(product => (
+                        <li key={product.id} onClick={() => handleProductSelect(product, index)}>
+                          <div className="product-item">
+                            <div className="product-name">{product.name}</div>
+                            <div className="product-details">
+                              Stock: {product.stock_quantity} | Price: {formatCurrency(product.selling_price)}
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {item.product && (
+                    <div className="selected-product-card">
+                      <div className="product-info-row">
+                        <div className="product-name-selected">{item.product.name}</div>
+                        <div className="product-price">{formatCurrency(item.product.selling_price)}</div>
+                      </div>
+                      <div className="product-stock-info">
+                        Available Stock: <span className="stock-count">{item.product.stock_quantity}</span> units
+                      </div>
+                    </div>
                   )}
                 </div>
 
-                {/* Inline layout: Item Number + Search + Quantity + Subtotal */}
-                <div className="item-fields">
-                  {/* Item Number */}
-                  <span className="item-number">Item {index + 1}</span>
-                  
-                  {/* Product Search */}
-                  <div className="form-group product-search-group">
-                    <div className="input-with-icon">
-                      <Search className="input-icon" />
-                      <input
-                        type="text"
-                        className="form-input"
-                        placeholder="Search for a product..."
-                        value={item.searchTerm}
-                        onChange={(e) => handleSearchChange(e.target.value, index)}
-                      />
-                    </div>
-                    {item.filteredProducts.length > 0 && item.searchTerm && (
-                      <ul className="product-search-results">
-                        {item.filteredProducts.map(product => (
-                          <li key={product.id} onClick={() => handleProductSelect(product, index)}>
-                            {product.name} (Stock: {product.stock_quantity}) - Rp {product.selling_price?.toLocaleString('id-ID')}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {item.product && (
-                      <div className="selected-product-info">
-                        <p><strong>Selected:</strong> {item.product.name}</p>
-                        <p><strong>Available Stock:</strong> {item.product.stock_quantity}</p>
-                        <p><strong>Price:</strong> Rp {item.product.selling_price?.toLocaleString('id-ID')}</p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Quantity Input */}
-                  <div className="form-group quantity-group">
+                {/* Quantity and Total */}
+                <div className="quantity-total-section">
+                  <div className="quantity-section">
+                    <label>Quantity</label>
                     <div className="quantity-input-group">
                       <button 
                         type="button" 
                         onClick={() => handleQuantityChange(item.quantity - 1, index)}
                         className="quantity-button"
+                        disabled={item.quantity <= 1}
                         title="Decrease quantity"
                       >
                         <Minus size={16} />
@@ -265,53 +306,66 @@ const AddTransaction = () => {
                       </button>
                     </div>
                     {item.product && item.quantity > item.product.stock_quantity && (
-                      <p className="error-message">Insufficient stock! Available: {item.product.stock_quantity}</p>
+                      <p className="error-message">
+                        <AlertTriangle size={16} />
+                        Insufficient stock! Available: {item.product.stock_quantity}
+                      </p>
                     )}
                   </div>
 
-                  {/* Subtotal Display */}
+                  {/* Subtotal */}
                   {item.product && (
-                    <div className="form-group subtotal-group">
+                    <div className="subtotal-section">
+                      <label>Subtotal</label>
                       <div className="subtotal-display">
-                        Rp {(item.product.selling_price * item.quantity).toLocaleString('id-ID')}
+                        <DollarSign size={16} />
+                        {formatCurrency(item.product.selling_price * item.quantity)}
                       </div>
                     </div>
                   )}
                 </div>
               </div>
-              
-              {/* Add Item Button - appears only after the last item */}
-              {index === items.length - 1 && (
-                <div className="add-item-container">
-                  <button 
-                    type="button" 
-                    onClick={() => addItem(index)} 
-                    className="add-item-inline-btn"
-                    title="Add item after this one"
-                  >
-                    <Plus size={16} /> Add Item Below
-                  </button>
-                </div>
-              )}
             </div>
           ))}
+          
+          {/* Add Item Button */}
+          <div className="add-item-section">
+            <button 
+              type="button" 
+              onClick={() => addItem(items.length - 1)} 
+              className="add-item-btn"
+              title="Add another item"
+            >
+              <Plus size={16} />
+              Add Another Item
+            </button>
+          </div>
         </div>
 
-        {/* Total Price Display */}
-        <div className="total-price-display">
-          <label>Total Amount</label>
-          <div className="input-with-icon">
-            <DollarSign className="input-icon" />
-            <span className="total-price-value">{formatCurrency(totalAmount)}</span>
+        {/* Total Summary Section */}
+        <div className="total-summary-section">
+          <div className="summary-row">
+            <span className="summary-label">Items Count:</span>
+            <span className="summary-value">{items.filter(item => item.product).length} item{items.filter(item => item.product).length !== 1 ? 's' : ''}</span>
+          </div>
+          <div className="summary-row total-row">
+            <span className="summary-label">Total Amount:</span>
+            <span className="summary-value">{formatCurrency(totalAmount)}</span>
           </div>
         </div>
 
         {/* Submit Button */}
         <button type="submit" className="submit-button" disabled={isSubmitting}>
           {isSubmitting ? (
-            <><Loader className="spinner" size={20} /> Processing...</>
+            <>
+              <Loader className="spinner" size={20} />
+              Processing...
+            </>
           ) : (
-            <><CheckCircle size={20} /> Submit Transaction</>
+            <>
+              <CheckCircle size={20} />
+              Submit Transaction
+            </>
           )}
         </button>
       </form>

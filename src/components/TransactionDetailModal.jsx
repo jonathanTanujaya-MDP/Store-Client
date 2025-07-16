@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Calendar, Package, Hash, DollarSign, User } from 'lucide-react';
+import { X, Calendar, Package, Hash, DollarSign, User, ShoppingCart } from 'lucide-react';
 import './TransactionDetailModal.css';
 
 const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
@@ -60,14 +60,29 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
     // Get total amount
     const totalAmount = getField(transaction, 'total_amount', 'total') || 0;
     
-    // Get items array or create single item
-    const items = transaction.items || transaction.transaction_items || [
+    // Get items array from the improved backend response
+    const items = transaction.items || transaction.transaction_items || [];
+    
+    // If no items found, try to create from legacy single-item data
+    const legacyItems = items.length === 0 ? [
         {
             product_name: getField(transaction, 'product_name', 'name') || 'Produk tidak diketahui',
             quantity: getField(transaction, 'quantity', 'amount') || 0,
             unit_price: getField(transaction, 'unit_price', 'unit_cost', 'price') || 0,
         }
-    ];
+    ] : items;
+
+    // Calculate subtotal for all items
+    const calculateSubtotal = () => {
+        return legacyItems.reduce((total, item) => {
+            const quantity = item.quantity || 0;
+            const unitPrice = item.unit_price || item.unit_cost || item.price || 0;
+            return total + (quantity * unitPrice);
+        }, 0);
+    };
+
+    const subtotal = calculateSubtotal();
+    const finalTotal = totalAmount || subtotal;
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -138,46 +153,72 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
                     {/* Items Table */}
                     <div className="items-section">
                         <h3 className="section-title">
-                            <Package size={18} />
-                            Detail Item ({items.length} item{items.length > 1 ? 's' : ''})
+                            <ShoppingCart size={18} />
+                            Detail Item ({legacyItems.length} item{legacyItems.length > 1 ? 's' : ''})
                         </h3>
                         <div className="items-table-wrapper">
                             <table className="items-table">
                                 <thead>
                                     <tr>
                                         <th>Produk</th>
-                                        <th>Jumlah</th>
+                                        <th>Qty</th>
                                         <th>Harga Satuan</th>
-                                        <th>Total</th>
+                                        <th>Total Harga</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {items.map((item, index) => (
-                                        <tr key={index}>
-                                            <td className="product-name">
-                                                {item.product_name || item.name || 'Produk tidak diketahui'}
-                                            </td>
-                                            <td className="quantity">
-                                                {item.quantity || 0} unit
-                                            </td>
-                                            <td className="unit-price">
-                                                {formatCurrency(item.unit_price || item.unit_cost || item.price || 0)}
-                                            </td>
-                                            <td className="item-total">
-                                                {formatCurrency((item.quantity || 0) * (item.unit_price || item.unit_cost || item.price || 0))}
-                                            </td>
-                                        </tr>
-                                    ))}
+                                    {legacyItems.map((item, index) => {
+                                        const quantity = item.quantity || 0;
+                                        const unitPrice = item.unit_price || item.unit_cost || item.price || 0;
+                                        const itemTotal = quantity * unitPrice;
+                                        
+                                        return (
+                                            <tr key={index}>
+                                                <td className="product-name">
+                                                    <div className="product-info">
+                                                        <Package size={16} className="product-icon" />
+                                                        <span>
+                                                            {item.product_name || item.name || 'Produk tidak diketahui'}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td className="quantity">
+                                                    <span className="qty-badge">{quantity} unit</span>
+                                                </td>
+                                                <td className="unit-price">
+                                                    {formatCurrency(unitPrice)}
+                                                </td>
+                                                <td className="item-total">
+                                                    <strong>{formatCurrency(itemTotal)}</strong>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    {/* Total Section */}
-                    <div className="total-section">
-                        <div className="total-row">
-                            <span className="total-label">Total Transaksi:</span>
-                            <span className="total-value">{formatCurrency(totalAmount)}</span>
+                    {/* Pricing Summary */}
+                    <div className="pricing-summary">
+                        <div className="summary-row">
+                            <span className="summary-label">Subtotal ({legacyItems.length} item{legacyItems.length > 1 ? 's' : ''}):</span>
+                            <span className="summary-value">{formatCurrency(subtotal)}</span>
+                        </div>
+                        {finalTotal !== subtotal && (
+                            <>
+                                <div className="summary-row">
+                                    <span className="summary-label">Penyesuaian:</span>
+                                    <span className="summary-value adjustment">
+                                        {formatCurrency(finalTotal - subtotal)}
+                                    </span>
+                                </div>
+                                <div className="summary-divider"></div>
+                            </>
+                        )}
+                        <div className="summary-row total-row">
+                            <span className="summary-label">Total Transaksi:</span>
+                            <span className="summary-value total">{formatCurrency(finalTotal)}</span>
                         </div>
                     </div>
 

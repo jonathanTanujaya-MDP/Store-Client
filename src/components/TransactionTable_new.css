@@ -127,7 +127,6 @@
   display: flex;
   gap: 8px;
   justify-content: center;
-  pointer-events: auto;
 }
 
 .view-btn {
@@ -142,16 +141,9 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  pointer-events: auto;
 }
 
 .view-btn:hover {
-  background: #3b82f6;
-  color: white;
-  transform: scale(1.1);
-}
-
-.table-row:hover .view-btn:hover {
   background: #3b82f6;
   color: white;
   transform: scale(1.1);

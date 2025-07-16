@@ -84,13 +84,22 @@
     background: white;
     border-color: white;
     color: #667eea;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.filter-btn.all.active {
+    background: white;
+    color: #667eea;
 }
 
 .filter-btn.sales.active {
+    background: white;
     color: #10b981;
 }
 
 .filter-btn.restock.active {
+    background: white;
     color: #f59e0b;
 }
 

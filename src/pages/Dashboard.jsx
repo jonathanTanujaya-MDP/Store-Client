@@ -108,11 +108,31 @@ const Dashboard = () => {
   return (
     <div className="dashboard-page">
       <div className="dashboard-header">
-        <h1 className="dashboard-title">Dashboard</h1>
-        <p className="dashboard-subtitle">Kelola persediaan produk Anda dengan mudah</p>
-        <div className="dashboard-time">
-          <Clock size={16} />
-          <span>Last updated: {new Date().toLocaleTimeString('id-ID')}</span>
+        <div className="dashboard-title-section">
+          <h1 className="dashboard-title">
+            <TrendingUp size={32} />
+            Dashboard
+          </h1>
+          <p className="dashboard-subtitle">
+            Kelola persediaan produk Anda dengan mudah
+          </p>
+        </div>
+        
+        <div className="dashboard-stats-section">
+          <div className="dashboard-time">
+            <Clock size={16} />
+            <span>Last updated: {new Date().toLocaleTimeString('id-ID')}</span>
+          </div>
+          <div className="quick-stats">
+            <div className="quick-stat">
+              <span className="quick-stat-value">{totalStock.toLocaleString('id-ID')}</span>
+              <span className="quick-stat-label">Total Stock</span>
+            </div>
+            <div className="quick-stat">
+              <span className="quick-stat-value">{dashboardStats.todaySales}</span>
+              <span className="quick-stat-label">Today's Sales</span>
+            </div>
+          </div>
         </div>
       </div>
       
