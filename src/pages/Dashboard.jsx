@@ -125,49 +125,43 @@ const Dashboard = () => {
           </div>
           <div className="quick-stats">
             <div className="quick-stat">
-              <span className="quick-stat-value">{totalStock.toLocaleString('id-ID')}</span>
-              <span className="quick-stat-label">Total Stock</span>
+              <span className="quick-stat-value">{lowStockAlerts}</span>
+              <span className="quick-stat-label">Low Stock</span>
             </div>
             <div className="quick-stat">
-              <span className="quick-stat-value">{dashboardStats.todaySales}</span>
-              <span className="quick-stat-label">Today's Sales</span>
+              <span className="quick-stat-value">{formatCurrency(dashboardStats.todayRevenue)}</span>
+              <span className="quick-stat-label">Today's Revenue</span>
             </div>
           </div>
         </div>
       </div>
       
-      {/* Enhanced Summary Cards */}
+      {/* Optimized Summary Cards - Removed duplicates */}
       <div className="summary-cards-grid">
         <Card 
-          title="Total Stock" 
+          title="Total Products" 
           value={totalStock.toLocaleString('id-ID')} 
           icon={Package} 
           onClick={() => navigate('/products')}
         />
         <Card 
-          title="Low Stock Alert" 
+          title="Stock Alerts" 
           value={lowStockAlerts} 
           icon={AlertTriangle} 
           className={lowStockAlerts > 0 ? "alert-card" : ""}
           onClick={() => navigate('/stock-alerts')}
         />
         <Card 
-          title="Today's Sales" 
+          title="Sales Today" 
           value={dashboardStats.todaySales} 
           icon={ShoppingCart}
-          onClick={() => navigate('/history')}
+          onClick={() => navigate('/add-transaction')}
         />
         <Card 
-          title="Today's Revenue" 
-          value={formatCurrency(dashboardStats.todayRevenue)} 
+          title="Monthly Revenue" 
+          value={formatCurrency(dashboardStats.todayRevenue * 30)} 
           icon={DollarSign}
           onClick={() => navigate('/reports')}
-        />
-        <Card 
-          title="Total Transactions" 
-          value={dashboardStats.totalTransactions} 
-          icon={TrendingUp}
-          onClick={() => navigate('/history')}
         />
       </div>
 

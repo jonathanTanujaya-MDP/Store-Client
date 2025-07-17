@@ -109,6 +109,7 @@
     padding: 24px;
     max-height: 70vh;
     overflow-y: auto;
+    background: #fafbfc;
 }
 
 /* Transaction Info Grid */
@@ -120,16 +121,18 @@
 }
 
 .info-card {
-    background: #f8fafc;
+    background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     padding: 16px;
     transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .info-card:hover {
-    background: #f1f5f9;
+    background: #ffffff;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .info-label {
@@ -166,11 +169,11 @@
 }
 
 .items-table-wrapper {
-    background: white;
+    background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .items-table {
@@ -179,12 +182,12 @@
 }
 
 .items-table thead th {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
     padding: 16px;
     text-align: left;
     font-weight: 600;
-    color: #475569;
-    border-bottom: 2px solid #e2e8f0;
+    color: #334155;
+    border-bottom: 2px solid #cbd5e1;
     font-size: 0.875rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -194,6 +197,7 @@
     padding: 16px;
     border-bottom: 1px solid #f1f5f9;
     vertical-align: middle;
+    background: #ffffff;
 }
 
 .items-table tbody tr:last-child td {
@@ -201,7 +205,7 @@
 }
 
 .items-table tbody tr:hover {
-    background: #fafbfc;
+    background: #f8fafc;
 }
 
 /* Product Info */
@@ -224,24 +228,27 @@
     align-items: center;
     background: #dbeafe;
     color: #1e40af;
-    padding: 4px 12px;
+    padding: 6px 14px;
     border-radius: 12px;
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 700;
     border: 1px solid #bfdbfe;
+    box-shadow: 0 1px 2px rgba(30, 64, 175, 0.1);
 }
 
 /* Price Cells */
 .unit-price {
-    font-weight: 500;
+    font-weight: 600;
     color: #059669;
     font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
 }
 
 .item-total {
-    font-weight: 700;
+    font-weight: 800;
     color: #dc2626;
     font-family: 'Courier New', monospace;
+    font-size: 1rem;
 }
 
 /* Pricing Summary */
@@ -249,8 +256,9 @@
     background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
     border: 2px solid #0ea5e9;
     border-radius: 16px;
-    padding: 20px;
+    padding: 24px;
     margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
 }
 
 .summary-row {
@@ -266,13 +274,13 @@
 
 .summary-label {
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 300;
     color: #0c4a6e;
 }
 
 .summary-value {
     font-size: 1.125rem;
-    font-weight: 600;
+    font-weight: 700;
     color: #0c4a6e;
     font-family: 'Courier New', monospace;
 }
@@ -282,27 +290,29 @@
 }
 
 .summary-divider {
-    height: 1px;
+    height: 2px;
     background: #0ea5e9;
     margin: 16px 0;
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 .total-row {
-    padding-top: 12px;
-    border-top: 2px solid #0ea5e9;
-    margin-top: 12px;
+    padding-top: 16px;
+    border-top: 3px solid #0ea5e9;
+    margin-top: 16px;
 }
 
 .total-row .summary-label {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 1.375rem;
+    font-weight: 800;
+    color: #0c4a6e;
 }
 
 .total-row .summary-value.total {
-    font-size: 1.5rem;
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 900;
     color: #0c4a6e;
+    text-shadow: 0 1px 2px rgba(12, 74, 110, 0.1);
 }
 
 /* Notes Section */
@@ -312,12 +322,14 @@
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(250, 204, 21, 0.1);
 }
 
 .notes-section h4 {
     margin: 0 0 8px 0;
     color: #92400e;
     font-size: 1rem;
+    font-weight: 600;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -328,6 +340,7 @@
     color: #a16207;
     line-height: 1.6;
     font-style: italic;
+    font-weight: 500;
 }
 
 /* Modal Footer */
@@ -359,6 +372,169 @@
     background: #4b5563;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Restock Modal Specific Styles */
+.restock-modal .modal-content {
+    border: 2px solid #10b981;
+}
+
+.restock-header {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+}
+
+.sales-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.restock-body {
+    background: #f0fdf4;
+}
+
+.sales-body {
+    background: #fafbfc;
+}
+
+/* Restock Info Cards */
+.info-card.restock-card {
+    background: #ecfdf5;
+    border: 1px solid #bbf7d0;
+    box-shadow: 0 1px 3px rgba(16, 185, 129, 0.1);
+}
+
+.info-card.restock-card:hover {
+    background: #dcfce7;
+    border-color: #86efac;
+}
+
+.info-card.sales-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.info-card.sales-card:hover {
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Restock Table Styling */
+.items-table-wrapper.restock-table {
+    background: #ffffff;
+    border: 2px solid #10b981;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+
+.items-table-wrapper.sales-table {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.restock-table .items-table thead th {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    color: #14532d;
+    border-bottom: 2px solid #10b981;
+}
+
+.sales-table .items-table thead th {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #334155;
+    border-bottom: 2px solid #cbd5e1;
+}
+
+/* Restock Quantity Badge */
+.qty-badge.restock-qty {
+    background: #dcfce7;
+    color: #14532d;
+    border: 1px solid #bbf7d0;
+    font-weight: 800;
+}
+
+.qty-badge.sales-qty {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+    font-weight: 700;
+}
+
+/* Restock Price Colors */
+.unit-price.restock-price {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.unit-price.sales-price {
+    color: #059669;
+    font-weight: 600;
+}
+
+.item-total.restock-total {
+    color: #dc2626;
+    font-weight: 800;
+}
+
+.item-total.sales-total {
+    color: #dc2626;
+    font-weight: 800;
+}
+
+/* Restock Summary Styling */
+.pricing-summary.restock-summary {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border: 2px solid #10b981;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+}
+
+.pricing-summary.sales-summary {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 2px solid #0ea5e9;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
+}
+
+.restock-summary .summary-label {
+    color: #14532d;
+    font-weight: 600;
+}
+
+.restock-summary .summary-value {
+    color: #14532d;
+    font-weight: 700;
+}
+
+.restock-summary .total-row .summary-label {
+    color: #14532d;
+    font-weight: 800;
+}
+
+.restock-summary .total-row .summary-value.total {
+    color: #14532d;
+    text-shadow: 0 1px 2px rgba(20, 83, 45, 0.1);
+}
+
+.restock-summary .summary-divider {
+    background: #10b981;
+}
+
+.restock-summary .total-row {
+    border-top: 3px solid #10b981;
+}
+
+/* Transaction Type Badges */
+.transaction-type-badge.restock-badge {
+    background: #10b981 !important;
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.transaction-type-badge.sales-badge {
+    background: #3b82f6 !important;
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* Mobile Responsive */
@@ -407,6 +583,16 @@
     }
     
     .pricing-summary {
+        padding: 16px;
+    }
+    
+    .restock-header,
+    .sales-header {
+        padding: 16px;
+    }
+    
+    .restock-body,
+    .sales-body {
         padding: 16px;
     }
 }

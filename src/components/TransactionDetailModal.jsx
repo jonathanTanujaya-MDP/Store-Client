@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Calendar, Package, Hash, DollarSign, User, ShoppingCart } from 'lucide-react';
+import { X, Calendar, Package, Hash, DollarSign, User, ShoppingCart, Truck, Building, PlusCircle } from 'lucide-react';
 import './TransactionDetailModal.css';
 
 const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
@@ -31,11 +31,19 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
     };
 
     const getTransactionTypeLabel = (type) => {
-        return type === 'restock' ? 'Restock' : 'Penjualan';
+        return type === 'restock' ? 'Restock Inventori' : 'Penjualan';
     };
 
     const getTransactionTypeColor = (type) => {
         return type === 'restock' ? '#10b981' : '#3b82f6';
+    };
+
+    const getTransactionIcon = (type) => {
+        return type === 'restock' ? PlusCircle : ShoppingCart;
+    };
+
+    const getModalHeaderClass = (type) => {
+        return type === 'restock' ? 'modal-header restock-header' : 'modal-header sales-header';
     };
 
     // Helper function to safely get field values
@@ -84,14 +92,18 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
     const subtotal = calculateSubtotal();
     const finalTotal = totalAmount || subtotal;
 
+    // Check if this is a restock transaction
+    const isRestock = transaction.transaction_type === 'restock';
+    const TransactionIcon = getTransactionIcon(transaction.transaction_type);
+
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content modal-wide" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
+            <div className={`modal-content modal-wide ${isRestock ? 'restock-modal' : 'sales-modal'}`} onClick={(e) => e.stopPropagation()}>
+                <div className={getModalHeaderClass(transaction.transaction_type)}>
                     <div className="modal-title-section">
                         <h2 className="modal-title">
-                            <Hash size={24} />
-                            Detail Transaksi
+                            <TransactionIcon size={24} />
+                            {isRestock ? 'Detail Restock Inventori' : 'Detail Transaksi Penjualan'}
                         </h2>
                         <div className="transaction-id-badge">
                             ID: {transaction.transaction_id || transaction.id || 'N/A'}
@@ -99,7 +111,7 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
                     </div>
                     <div className="modal-header-actions">
                         <div 
-                            className="transaction-type-badge"
+                            className={`transaction-type-badge ${isRestock ? 'restock-badge' : 'sales-badge'}`}
                             style={{ 
                                 backgroundColor: getTransactionTypeColor(transaction.transaction_type),
                                 color: 'white'
@@ -113,57 +125,73 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
                     </div>
                 </div>
 
-                <div className="modal-body">
+                <div className={`modal-body ${isRestock ? 'restock-body' : 'sales-body'}`}>
                     <div className="transaction-info-grid">
                         <div className="info-card">
                             <div className="info-label">
                                 <Calendar size={16} />
-                                Tanggal Transaksi
+                                {isRestock ? 'Tanggal Restock' : 'Tanggal Transaksi'}
                             </div>
                             <div className="info-value">
                                 {formatDate(transactionDate)}
                             </div>
                         </div>
 
-                        {customerName && (
-                            <div className="info-card">
-                                <div className="info-label">
-                                    <User size={16} />
-                                    Customer
+                        {isRestock ? (
+                            // Restock specific info
+                            <>
+                                {supplierName && (
+                                    <div className="info-card restock-card">
+                                        <div className="info-label">
+                                            <Truck size={16} />
+                                            Supplier
+                                        </div>
+                                        <div className="info-value">
+                                            {supplierName}
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="info-card restock-card">
+                                    <div className="info-label">
+                                        <Building size={16} />
+                                        Tipe Transaksi
+                                    </div>
+                                    <div className="info-value">
+                                        Penambahan Stok
+                                    </div>
                                 </div>
-                                <div className="info-value">
-                                    {customerName}
+                            </>
+                        ) : (
+                            // Sales specific info
+                            customerName && (
+                                <div className="info-card sales-card">
+                                    <div className="info-label">
+                                        <User size={16} />
+                                        Customer
+                                    </div>
+                                    <div className="info-value">
+                                        {customerName}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-
-                        {supplierName && (
-                            <div className="info-card">
-                                <div className="info-label">
-                                    <User size={16} />
-                                    Supplier
-                                </div>
-                                <div className="info-value">
-                                    {supplierName}
-                                </div>
-                            </div>
+                            )
                         )}
                     </div>
 
                     {/* Items Table */}
-                    <div className="items-section">
+                    <div className={`items-section ${isRestock ? 'restock-items' : 'sales-items'}`}>
                         <h3 className="section-title">
-                            <ShoppingCart size={18} />
-                            Detail Item ({legacyItems.length} item{legacyItems.length > 1 ? 's' : ''})
+                            <TransactionIcon size={18} />
+                            {isRestock ? 'Detail Barang yang Direstok' : 'Detail Item yang Dibeli'} 
+                            ({legacyItems.length} item{legacyItems.length > 1 ? 's' : ''})
                         </h3>
-                        <div className="items-table-wrapper">
+                        <div className={`items-table-wrapper ${isRestock ? 'restock-table' : 'sales-table'}`}>
                             <table className="items-table">
                                 <thead>
                                     <tr>
                                         <th>Produk</th>
-                                        <th>Qty</th>
-                                        <th>Harga Satuan</th>
-                                        <th>Total Harga</th>
+                                        <th>{isRestock ? 'Qty Ditambah' : 'Qty Dibeli'}</th>
+                                        <th>{isRestock ? 'Harga Beli' : 'Harga Satuan'}</th>
+                                        <th>{isRestock ? 'Total Biaya' : 'Total Harga'}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -183,12 +211,14 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
                                                     </div>
                                                 </td>
                                                 <td className="quantity">
-                                                    <span className="qty-badge">{quantity} unit</span>
+                                                    <span className={`qty-badge ${isRestock ? 'restock-qty' : 'sales-qty'}`}>
+                                                        {isRestock ? '+' : ''}{quantity} unit
+                                                    </span>
                                                 </td>
-                                                <td className="unit-price">
+                                                <td className={`unit-price ${isRestock ? 'restock-price' : 'sales-price'}`}>
                                                     {formatCurrency(unitPrice)}
                                                 </td>
-                                                <td className="item-total">
+                                                <td className={`item-total ${isRestock ? 'restock-total' : 'sales-total'}`}>
                                                     <strong>{formatCurrency(itemTotal)}</strong>
                                                 </td>
                                             </tr>
@@ -200,9 +230,11 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
                     </div>
 
                     {/* Pricing Summary */}
-                    <div className="pricing-summary">
+                    <div className={`pricing-summary ${isRestock ? 'restock-summary' : 'sales-summary'}`}>
                         <div className="summary-row">
-                            <span className="summary-label">Subtotal ({legacyItems.length} item{legacyItems.length > 1 ? 's' : ''}):</span>
+                            <span className="summary-label">
+                                {isRestock ? 'Subtotal Biaya Restock' : 'Subtotal Penjualan'} ({legacyItems.length} item{legacyItems.length > 1 ? 's' : ''}):
+                            </span>
                             <span className="summary-value">{formatCurrency(subtotal)}</span>
                         </div>
                         {finalTotal !== subtotal && (
@@ -217,7 +249,9 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
                             </>
                         )}
                         <div className="summary-row total-row">
-                            <span className="summary-label">Total Transaksi:</span>
+                            <span className="summary-label">
+                                {isRestock ? 'Total Biaya Restock:' : 'Total Transaksi:'}
+                            </span>
                             <span className="summary-value total">{formatCurrency(finalTotal)}</span>
                         </div>
                     </div>
