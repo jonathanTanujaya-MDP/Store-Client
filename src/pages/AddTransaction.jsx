@@ -3,19 +3,19 @@ import { useProducts } from '../context/ProductContext.jsx';
 import axios from 'axios';
 import { useSales } from '../context/SalesContext.jsx';
 import toast from 'react-hot-toast';
-import { Search, Package, User, Calendar, DollarSign, CheckCircle, XCircle, Loader, Minus, Plus, X, ShoppingCart, AlertTriangle } from 'lucide-react';
+import { Search, Package, User, Calendar, DollarSign, CheckCircle, XCircle, Loader, Minus, Plus, X, ShoppingCart, AlertTriangle, LayoutDashboard } from 'lucide-react';
 import { formatCurrency } from '../utils/currency.js';
 import './AddTransaction.css';
 
 const AddTransaction = () => {
   const { products, fetchProducts } = useProducts();
   const { createSale } = useSales();
-  const [items, setItems] = useState([{ productId: '', product: null, quantity: 1, searchTerm: '', filteredProducts: [] }]);
   const [customerName, setCustomerName] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [items, setItems] = useState([]);
+  const [currentItem, setCurrentItem] = useState({ productId: '', product: null, quantity: 1, searchTerm: '', filteredProducts: [] });
   const [totalAmount, setTotalAmount] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Calculate total amount when items change
   useEffect(() => {
     const total = items.reduce((sum, item) => {
       if (item.product && item.quantity > 0) {
@@ -27,76 +27,51 @@ const AddTransaction = () => {
   }, [items]);
 
   // Filter products for search
-  const filterProducts = (searchTerm, itemIndex) => {
+  const filterProducts = (searchTerm) => {
     if (searchTerm) {
       const filtered = products.filter(p => 
         p.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      updateItem(itemIndex, { filteredProducts: filtered });
+      setCurrentItem(prev => ({ ...prev, filteredProducts: filtered }));
     } else {
-      updateItem(itemIndex, { filteredProducts: [] });
+      setCurrentItem(prev => ({ ...prev, filteredProducts: [] }));
     }
   };
 
-  // Update specific item
-  const updateItem = (index, updates) => {
-    setItems(prevItems => 
-      prevItems.map((item, i) => 
-        i === index ? { ...item, ...updates } : item
-      )
-    );
-  };
-
-  // Add new item row
-  const addItem = (afterIndex = null) => {
-    const newItem = { 
-      productId: '', 
-      product: null, 
-      quantity: 1, 
-      searchTerm: '', 
-      filteredProducts: [] 
-    };
-    
-    if (afterIndex !== null) {
-      // Insert after specific index
-      setItems(prev => [
-        ...prev.slice(0, afterIndex + 1),
-        newItem,
-        ...prev.slice(afterIndex + 1)
-      ]);
-    } else {
-      // Add at the end
-      setItems(prev => [...prev, newItem]);
+  // Add item to list
+  const addItemToList = () => {
+    if (currentItem.product && currentItem.quantity > 0) {
+      setItems(prev => [...prev, { ...currentItem }]);
+      setCurrentItem({ productId: '', product: null, quantity: 1, searchTerm: '', filteredProducts: [] });
     }
   };
 
-  // Remove item row
-  const removeItem = (index) => {
-    if (items.length > 1) {
-      setItems(prev => prev.filter((_, i) => i !== index));
-    }
+  // Remove item from list
+  const removeItemFromList = (index) => {
+    setItems(prev => prev.filter((_, i) => i !== index));
   };
 
   // Handle product selection
-  const handleProductSelect = (product, itemIndex) => {
-    updateItem(itemIndex, {
+  const handleProductSelect = (product) => {
+    setCurrentItem(prev => ({
+      ...prev,
       product: product,
       productId: product.id,
       searchTerm: product.name,
       filteredProducts: []
-    });
+    }));
   };
 
   // Handle search term change
-  const handleSearchChange = (value, itemIndex) => {
-    updateItem(itemIndex, { searchTerm: value });
-    filterProducts(value, itemIndex);
+  const handleSearchChange = (value) => {
+    setCurrentItem(prev => ({ ...prev, searchTerm: value }));
+    filterProducts(value);
   };
 
   // Handle quantity change
-  const handleQuantityChange = (value, itemIndex) => {
+  const handleQuantityChange = (value) => {
     const quantity = Math.max(1, parseInt(value) || 1);
-    updateItem(itemIndex, { quantity });
+    setCurrentItem(prev => ({ ...prev, quantity }));
   };
 
   // Submit transaction
@@ -112,10 +87,16 @@ const AddTransaction = () => {
         return;
       }
 
+      if (items.length === 0) {
+        toast.error('Please add at least one item to the transaction');
+        setIsSubmitting(false);
+        return;
+      }
+
       const validItems = items.filter(item => item.product && item.quantity > 0);
       
       if (validItems.length === 0) {
-        toast.error('Please select at least one product');
+        toast.error('Please add at least one valid item to the transaction');
         setIsSubmitting(false);
         return;
       }
@@ -140,7 +121,8 @@ const AddTransaction = () => {
       toast.success(`Transaction successful! ${validItems.length} item(s) sold.`);
       
       // Reset form
-      setItems([{ productId: '', product: null, quantity: 1, searchTerm: '', filteredProducts: [] }]);
+      setItems([]);
+      setCurrentItem({ productId: '', product: null, quantity: 1, searchTerm: '', filteredProducts: [] });
       setCustomerName('');
       await fetchProducts(); // Refresh product list
       
@@ -163,17 +145,6 @@ const AddTransaction = () => {
           <p className="add-transaction-subtitle">
             Record your product sales efficiently
           </p>
-        </div>
-        
-        <div className="transaction-summary">
-          <div className="summary-card">
-            <div className="summary-label">Total Items</div>
-            <div className="summary-value">{items.filter(item => item.product).length}</div>
-          </div>
-          <div className="summary-card">
-            <div className="summary-label">Total Amount</div>
-            <div className="summary-value">{formatCurrency(totalAmount)}</div>
-          </div>
         </div>
       </div>
       
@@ -205,148 +176,163 @@ const AddTransaction = () => {
         <div className="items-section">
           <div className="section-title">
             <ShoppingCart size={20} />
-            <span>Transaction Items</span>
-            <div className="items-count">
-              {items.filter(item => item.product).length} item{items.filter(item => item.product).length !== 1 ? 's' : ''} selected
-            </div>
+            <span>Transaction Items ({items.length})</span>
           </div>
 
-          {items.map((item, index) => (
-            <div key={index} className="item-card">
-              <div className="item-card-header">
-                <div className="item-number-badge">
-                  <Package size={16} />
-                  Item {index + 1}
-                </div>
-                {items.length > 1 && (
-                  <button 
-                    type="button" 
-                    onClick={() => removeItem(index)}
-                    className="remove-item-btn"
-                    title="Remove this item"
-                  >
-                    <X size={16} />
-                  </button>
-                )}
-              </div>
-
-              <div className="item-card-content">
-                {/* Product Search */}
-                <div className="product-search-section">
-                  <label>Select Product <span className="required-indicator">*</span></label>
-                  <div className="input-with-icon">
-                    <Search className="input-icon" />
-                    <input
-                      type="text"
-                      className="form-input product-search-input"
-                      placeholder="Search for a product..."
-                      value={item.searchTerm}
-                      onChange={(e) => handleSearchChange(e.target.value, index)}
-                    />
-                  </div>
-                  {item.filteredProducts.length > 0 && item.searchTerm && (
-                    <ul className="product-search-results">
-                      {item.filteredProducts.map(product => (
-                        <li key={product.id} onClick={() => handleProductSelect(product, index)}>
-                          <div className="product-item">
-                            <div className="product-name">{product.name}</div>
-                            <div className="product-details">
-                              Stock: {product.stock_quantity} | Price: {formatCurrency(product.selling_price)}
-                            </div>
+          {/* Add Item Card - Compact Design */}
+          <div className="add-item-card">
+            <div className="add-item-row">
+              {/* Product Search with Autocomplete */}
+              <div className="product-search-container">
+                <div className="search-input-wrapper">
+                  <Search className="search-icon" size={16} />
+                  <input
+                    type="text"
+                    className="product-search-input"
+                    placeholder="Type to search products..."
+                    value={currentItem.searchTerm}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    autoComplete="off"
+                  />
+                  
+                  {/* Autocomplete Dropdown */}
+                  {currentItem.filteredProducts.length > 0 && currentItem.searchTerm && (
+                    <div className="autocomplete-dropdown">
+                      {currentItem.filteredProducts.slice(0, 5).map(product => (
+                        <div
+                          key={product.id}
+                          className="autocomplete-item"
+                          onClick={() => handleProductSelect(product)}
+                        >
+                          <div className="product-info">
+                            <span className="product-name">{product.name}</span>
+                            <span className="product-meta">
+                              Stock: {product.stock_quantity} • {formatCurrency(product.selling_price)}
+                            </span>
                           </div>
-                        </li>
+                        </div>
                       ))}
-                    </ul>
-                  )}
-                  {item.product && (
-                    <div className="selected-product-card">
-                      <div className="product-info-row">
-                        <div className="product-name-selected">{item.product.name}</div>
-                        <div className="product-price">{formatCurrency(item.product.selling_price)}</div>
-                      </div>
-                      <div className="product-stock-info">
-                        Available Stock: <span className="stock-count">{item.product.stock_quantity}</span> units
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Quantity and Total */}
-                <div className="quantity-total-section">
-                  <div className="quantity-section">
-                    <label>Quantity</label>
-                    <div className="quantity-input-group">
-                      <button 
-                        type="button" 
-                        onClick={() => handleQuantityChange(item.quantity - 1, index)}
-                        className="quantity-button"
-                        disabled={item.quantity <= 1}
-                        title="Decrease quantity"
-                      >
-                        <Minus size={16} />
-                      </button>
-                      <input
-                        type="number"
-                        className="form-input quantity-input"
-                        value={item.quantity}
-                        onChange={(e) => handleQuantityChange(e.target.value, index)}
-                        min="1"
-                        max={item.product ? item.product.stock_quantity : 999}
-                        placeholder="1"
-                        title="Quantity to sell"
-                      />
-                      <button 
-                        type="button" 
-                        onClick={() => handleQuantityChange(item.quantity + 1, index)}
-                        className="quantity-button"
-                        disabled={item.product && item.quantity >= item.product.stock_quantity}
-                        title="Increase quantity"
-                      >
-                        <Plus size={16} />
-                      </button>
-                    </div>
-                    {item.product && item.quantity > item.product.stock_quantity && (
-                      <p className="error-message">
-                        <AlertTriangle size={16} />
-                        Insufficient stock! Available: {item.product.stock_quantity}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Subtotal */}
-                  {item.product && (
-                    <div className="subtotal-section">
-                      <label>Subtotal</label>
-                      <div className="subtotal-display">
-                        <DollarSign size={16} />
-                        {formatCurrency(item.product.selling_price * item.quantity)}
-                      </div>
                     </div>
                   )}
                 </div>
               </div>
+
+              {/* Quantity Control - Inline */}
+              <div className="quantity-control-inline">
+                <button 
+                  type="button" 
+                  onClick={() => handleQuantityChange(currentItem.quantity - 1)}
+                  className="qty-btn"
+                  disabled={currentItem.quantity <= 1}
+                >
+                  <Minus size={14} />
+                </button>
+                <input
+                  type="number"
+                  className="qty-input"
+                  value={currentItem.quantity}
+                  onChange={(e) => handleQuantityChange(e.target.value)}
+                  min="1"
+                  max={currentItem.product ? currentItem.product.stock_quantity : 999}
+                />
+                <button 
+                  type="button" 
+                  onClick={() => handleQuantityChange(currentItem.quantity + 1)}
+                  className="qty-btn"
+                  disabled={currentItem.product && currentItem.quantity >= currentItem.product.stock_quantity}
+                >
+                  <Plus size={14} />
+                </button>
+              </div>
             </div>
-          ))}
-          
-          {/* Add Item Button */}
-          <div className="add-item-section">
-            <button 
-              type="button" 
-              onClick={() => addItem(items.length - 1)} 
-              className="add-item-btn"
-              title="Add another item"
-            >
-              <Plus size={16} />
-              Add Another Item
-            </button>
+
+            {/* Consolidated Product Info */}
+            {currentItem.product && (
+              <div className="consolidated-product-info">
+                <div className="product-header">
+                  <div className="product-main-info">
+                    <h4>{currentItem.product.name}</h4>
+                    <div className="product-meta">
+                      <span>Model: {currentItem.product.id || 'N/A'}</span>
+                      <span>Stock: {currentItem.product.stock_quantity} units</span>
+                      <span>Category: {currentItem.product.category || 'General'}</span>
+                    </div>
+                  </div>
+                  <div className="product-price-main">
+                    {formatCurrency(currentItem.product.selling_price)}
+                  </div>
+                </div>
+
+                <div className="quantity-price-row">
+                  <div className="quantity-simple">
+                    <span>Qty:</span>
+                    <span className="quantity-value">{currentItem.quantity}</span>
+                    <span>•</span>
+                    <span className="subtotal-simple">{formatCurrency(currentItem.product.selling_price * currentItem.quantity)}</span>
+                  </div>
+                </div>
+
+                {/* Enhanced Add Button */}
+                <button 
+                  type="button" 
+                  onClick={addItemToList}
+                  className="add-btn-enhanced"
+                  disabled={!currentItem.product}
+                >
+                  Add Item
+                </button>
+              </div>
+            )}
+
+            {/* Error Message */}
+            {currentItem.product && currentItem.quantity > currentItem.product.stock_quantity && (
+              <div className="error-message">
+                <AlertTriangle size={14} />
+                Insufficient stock! Available: {currentItem.product.stock_quantity}
+              </div>
+            )}
           </div>
+
+          {/* Simplified Items List */}
+          {items.length > 0 && (
+            <div className="items-list-simplified">
+              <div className="items-list-header">
+                <h4>Added Items</h4>
+                <span className="items-count-badge">{items.length}</span>
+              </div>
+              <div className="items-list">
+                {items.map((item, index) => (
+                  <div key={index} className="item-row-flat">
+                    <div className="item-info-flat">
+                      <div className="item-name-flat">
+                        <span className="item-checkmark">✓</span>
+                        {item.product.name}
+                      </div>
+                      <div className="item-calculation-flat">
+                        <span>×{item.quantity}</span>
+                        <span>=</span>
+                        <span>{formatCurrency(item.product.selling_price * item.quantity)}</span>
+                      </div>
+                    </div>
+                    <button 
+                      type="button" 
+                      onClick={() => removeItemFromList(index)}
+                      className="remove-btn-minimal"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Total Summary Section */}
         <div className="total-summary-section">
           <div className="summary-row">
             <span className="summary-label">Items Count:</span>
-            <span className="summary-value">{items.filter(item => item.product).length} item{items.filter(item => item.product).length !== 1 ? 's' : ''}</span>
+            <span className="summary-value">{items.length} item{items.length !== 1 ? 's' : ''}</span>
           </div>
           <div className="summary-row total-row">
             <span className="summary-label">Total Amount:</span>

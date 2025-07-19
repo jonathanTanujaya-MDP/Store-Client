@@ -3,6 +3,7 @@ import { useReactTable, getCoreRowModel, flexRender, getPaginationRowModel, getS
 import { useTransactions } from '../context/TransactionContext.jsx';
 import { Eye, Search, AlertCircle, RefreshCw, Database } from 'lucide-react';
 import TransactionDetailModal from './TransactionDetailModal.jsx';
+import { formatCurrency } from '../utils/currency.js';
 import './TransactionTable.css';
 
 const TransactionTable = ({ activeFilter = 'all' }) => {
@@ -135,11 +136,7 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
         header: () => 'Total',
         cell: info => {
           const amount = info.getValue() || info.row.original.total || 0;
-          return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-          }).format(amount);
+          return formatCurrency(amount);
         },
       },
       {
@@ -147,11 +144,7 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
         header: () => 'Profit',
         cell: info => {
           const profit = info.getValue() || info.row.original.profit || 0;
-          return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-          }).format(profit);
+          return formatCurrency(profit);
         },
       },
       {

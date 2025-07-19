@@ -1,19 +1,10 @@
 import React from 'react';
 import { X, Calendar, Package, Hash, DollarSign, User, ShoppingCart, Truck, Building, PlusCircle } from 'lucide-react';
+import { formatCurrency } from '../utils/currency.js';
 import './TransactionDetailModal.css';
 
 const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
     if (!isOpen || !transaction) return null;
-
-    const formatCurrency = (amount) => {
-        if (!amount || isNaN(amount)) return 'Rp 0';
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        }).format(amount);
-    };
 
     const formatDate = (dateString) => {
         if (!dateString) return 'Tanggal tidak tersedia';

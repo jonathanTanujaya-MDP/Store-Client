@@ -4,6 +4,7 @@ import { useProducts } from '../context/ProductContext.jsx';
 import ProductForm from './ProductForm.jsx';
 import toast from 'react-hot-toast'; // Import toast
 import ConfirmationDialog from './ConfirmationDialog.jsx'; // Import ConfirmationDialog
+import { formatCurrency } from '../utils/currency.js'; // Import currency formatter
 import './ProductTable.css';
 
 const ProductTable = () => {
@@ -105,12 +106,12 @@ const ProductTable = () => {
       {
         accessorKey: 'purchase_price',
         header: () => 'Purchase Price',
-        cell: info => `$${info.getValue()}`,
+        cell: info => formatCurrency(info.getValue()),
       },
       {
         accessorKey: 'selling_price',
         header: () => 'Selling Price',
-        cell: info => `$${info.getValue()}`,
+        cell: info => formatCurrency(info.getValue()),
       },
       {
         id: 'actions',

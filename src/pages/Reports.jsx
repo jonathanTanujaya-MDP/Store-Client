@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useSales } from '../context/SalesContext.jsx';
 import { useTransactions } from '../context/TransactionContext.jsx';
+import { formatCurrency } from '../utils/currency.js';
 import { useProducts } from '../context/ProductContext.jsx';
 import './Reports.css';
 
@@ -165,14 +166,6 @@ const Reports = () => {
             loading: false
         });
     }, [selectedPeriod, sales, transactions, salesLoading, transactionsLoading]);
-
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-        }).format(amount);
-    };
 
     // Handle detailed report view
     const handleDetailedReport = () => {
