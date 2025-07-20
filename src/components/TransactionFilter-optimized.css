@@ -1,0 +1,337 @@
+/* Transaction Filter Component - Mobile & Tablet Optimized */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Main Container */
+.transaction-filter-container {
+  width: 100%;
+  margin-bottom: 2rem;
+  font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Main Filter Card */
+.transaction-filter-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  transition: all 200ms ease-in-out;
+  overflow: hidden;
+}
+
+.transaction-filter-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Filter Header */
+.filter-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.filter-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.025em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.filter-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Desktop: Horizontal Filter Buttons Container */
+.filter-buttons-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* Individual Filter Button */
+.filter-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 20px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 12px;
+  border: 1px solid #0F52BA;
+  background: white;
+  color: #0F52BA;
+  cursor: pointer;
+  transition: all 200ms ease-in-out;
+  min-width: 44px; /* Touch target minimum per accessibility guidelines */
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Button Hover State */
+.filter-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 82, 186, 0.15);
+  border-color: #0a3d8a;
+  color: #0a3d8a;
+}
+
+/* Active Button - Gradient Background */
+.filter-button.active {
+  background: linear-gradient(135deg, #0F52BA 0%, #6A5ACD 100%);
+  color: #FFFFFF;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 82, 186, 0.25);
+}
+
+.filter-button.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 82, 186, 0.35);
+}
+
+/* Icon Sizing - Desktop */
+.filter-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Filter Button Text */
+.filter-button-text {
+  font-family: 'Inter', 'Poppins', sans-serif;
+}
+
+/* Tablet Optimization (per prompt specifications) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .transaction-filter-card {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 16px;
+    }
+    
+    .filter-title {
+        font-size: 18px;
+        font-weight: 700;
+    }
+    
+    .filter-buttons-container {
+        gap: 12px;
+    }
+    
+    .filter-button {
+        height: 48px;
+        font-size: 16px;
+        padding: 0 16px;
+    }
+    
+    .filter-button svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Mobile Optimization (per prompt specifications) */
+@media (max-width: 768px) {
+    .transaction-filter-card {
+        width: 100%;
+        padding: 16px;
+        border-radius: 12px;
+    }
+    
+    .filter-header {
+        margin-bottom: 1rem;
+    }
+    
+    .filter-title {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .filter-subtitle {
+        font-size: 13px;
+    }
+    
+    /* Mobile: Vertical Column Layout with shadow and inner padding */
+    .filter-buttons-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+        background: white;
+        padding: 12px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        border: 1px solid #f1f5f9;
+    }
+    
+    .filter-button {
+        height: 40px;
+        font-size: 14px;
+        font-weight: 500;
+        width: 100%;
+        justify-content: center;
+        border-radius: 8px;
+        padding: 0 12px;
+        min-height: 44px; /* Touch target minimum */
+    }
+    
+    .filter-button svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Extra small mobile screens */
+@media (max-width: 480px) {
+    .transaction-filter-card {
+        padding: 12px;
+        border-radius: 10px;
+    }
+    
+    .filter-title {
+        font-size: 15px;
+    }
+    
+    .filter-subtitle {
+        font-size: 12px;
+    }
+    
+    .filter-buttons-container {
+        gap: 6px;
+        padding: 10px;
+    }
+    
+    .filter-button {
+        height: 38px;
+        font-size: 13px;
+        padding: 0 10px;
+        min-height: 44px; /* Maintain touch target */
+    }
+    
+    .filter-button svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* Auto-layout for different orientations */
+@media (max-width: 768px) and (orientation: landscape) {
+    .filter-buttons-container {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 8px;
+    }
+    
+    .filter-button {
+        flex: 1;
+        min-width: 0;
+        height: 36px;
+        font-size: 13px;
+        min-height: 44px; /* Maintain accessibility */
+    }
+}
+
+/* High-resolution displays optimization */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .transaction-filter-card {
+        border-width: 0.5px;
+    }
+    
+    .filter-button {
+        border-width: 0.5px;
+    }
+    
+    .filter-buttons-container {
+        border-width: 0.5px;
+    }
+}
+
+/* Enhanced accessibility - Focus states */
+.filter-button:focus {
+    outline: 2px solid #0F52BA;
+    outline-offset: 2px;
+}
+
+.filter-button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.filter-button:focus-visible {
+    outline: 2px solid #0F52BA;
+    outline-offset: 2px;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .filter-button,
+    .transaction-filter-card {
+        transition: none;
+    }
+    
+    .filter-button:hover,
+    .filter-button.active {
+        transform: none;
+    }
+}
+
+/* Dark mode support (optional enhancement) */
+@media (prefers-color-scheme: dark) {
+    .transaction-filter-card {
+        background: #1f2937;
+        border-color: #374151;
+    }
+    
+    .filter-title {
+        color: white;
+    }
+    
+    .filter-subtitle {
+        color: #d1d5db;
+    }
+    
+    .filter-button {
+        background: #374151;
+        border-color: #4b5563;
+        color: #d1d5db;
+    }
+    
+    .filter-button:hover {
+        background: #4b5563;
+        border-color: #6b7280;
+        color: white;
+    }
+    
+    .filter-button.active {
+        background: linear-gradient(135deg, #0F52BA 0%, #6A5ACD 100%);
+        color: white;
+        border-color: transparent;
+    }
+    
+    .filter-buttons-container {
+        background: #374151;
+        border-color: #4b5563;
+    }
+}
+
+/* Print styles */
+@media print {
+    .transaction-filter-card {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+    
+    .filter-button {
+        border: 1px solid #000;
+    }
+}

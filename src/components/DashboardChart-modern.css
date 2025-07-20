@@ -1,0 +1,456 @@
+/* Dashboard Chart - Modern Responsive Design */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+.dashboard-chart-wrapper {
+    font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+/* Header Section */
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px 24px 0 24px;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 20px;
+    gap: 16px;
+}
+
+.chart-title-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.chart-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chart-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* Actions Section */
+.chart-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #334155;
+}
+
+.reset-btn {
+    border-color: #f59e0b;
+    color: #f59e0b;
+}
+
+.reset-btn:hover {
+    background: #fef3c7;
+    border-color: #f59e0b;
+}
+
+.export-btn {
+    display: none; /* Export buttons removed */
+}
+
+.export-group {
+    display: none; /* Export functionality removed */
+}
+
+/* Controls Section */
+.chart-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px 20px 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.chart-type-selector {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.control-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    white-space: nowrap;
+}
+
+.chart-type-buttons {
+    display: flex;
+    gap: 4px;
+    background: #f8fafc;
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.chart-type-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.chart-type-btn:hover {
+    color: #334155;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.chart-type-btn.active {
+    background: white;
+    color: #0ea5e9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Filters */
+.chart-filters {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+    white-space: nowrap;
+}
+
+.filter-select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+}
+
+.filter-select:hover {
+    border-color: #9ca3af;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+/* Chart Container */
+.dashboard-chart-container {
+    padding: 0 24px 24px 24px;
+}
+
+.chart-content {
+    position: relative;
+    height: 400px;
+    width: 100%;
+}
+
+/* Loading & Error States */
+.chart-loading, .chart-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    min-height: 300px;
+}
+
+.chart-loading .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #0ea5e9;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.chart-loading p {
+    color: #6b7280;
+    font-size: 15px;
+    margin: 0;
+    font-weight: 500;
+}
+
+.chart-error {
+    color: #ef4444;
+}
+
+.chart-error p {
+    margin: 4px 0;
+}
+
+.chart-error p:first-child {
+    font-weight: 600;
+    color: #dc2626;
+    font-size: 16px;
+}
+
+.chart-error p:last-child {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Tablet Responsive */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .chart-header {
+        padding: 20px 20px 0 20px;
+    }
+    
+    .chart-title {
+        font-size: 18px;
+    }
+    
+    .chart-controls {
+        padding: 0 20px 16px 20px;
+        gap: 12px;
+    }
+    
+    .dashboard-chart-container {
+        padding: 0 20px 20px 20px;
+    }
+    
+    .chart-content {
+        height: 350px;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .dashboard-chart-wrapper {
+        border-radius: 12px;
+        margin: 0 16px 16px 16px;
+    }
+    
+    .chart-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 16px 16px 0 16px;
+        gap: 12px;
+    }
+    
+    .chart-title {
+        font-size: 18px;
+    }
+    
+    .chart-subtitle {
+        font-size: 13px;
+    }
+    
+    .chart-actions {
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .action-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+    
+    .chart-controls {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0 16px 16px 16px;
+        gap: 12px;
+    }
+    
+    .chart-type-selector {
+        justify-content: center;
+    }
+    
+    .chart-type-buttons {
+        justify-content: center;
+    }
+    
+    .chart-filters {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    .filter-group {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+    }
+    
+    .filter-label {
+        font-size: 12px;
+        justify-content: center;
+    }
+    
+    .filter-select {
+        min-width: 120px;
+        font-size: 12px;
+    }
+    
+    .dashboard-chart-container {
+        padding: 0 16px 16px 16px;
+    }
+    
+    .chart-content {
+        height: 300px;
+    }
+    
+    .chart-loading, .chart-error {
+        padding: 40px 16px;
+        min-height: 250px;
+    }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 480px) {
+    .dashboard-chart-wrapper {
+        margin: 0 12px 12px 12px;
+    }
+    
+    .chart-header {
+        padding: 12px 12px 0 12px;
+    }
+    
+    .chart-title {
+        font-size: 16px;
+    }
+    
+    .chart-controls {
+        padding: 0 12px 12px 12px;
+        gap: 10px;
+    }
+    
+    .dashboard-chart-container {
+        padding: 0 12px 12px 12px;
+    }
+    
+    .chart-content {
+        height: 280px;
+    }
+    
+    .chart-type-btn {
+        padding: 6px 8px;
+        font-size: 11px;
+    }
+    
+    .filter-select {
+        min-width: 100px;
+        padding: 6px 8px;
+    }
+}
+
+/* Landscape Mode on Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .chart-content {
+        height: 250px;
+    }
+    
+    .chart-controls {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .chart-filters {
+        gap: 8px;
+    }
+    
+    .filter-group {
+        flex-direction: row;
+        gap: 6px;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .dashboard-chart-wrapper {
+        border-width: 0.5px;
+    }
+    
+    .chart-header {
+        border-bottom-width: 0.5px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .dashboard-chart-wrapper {
+        box-shadow: none;
+        border: 1px solid #000;
+        page-break-inside: avoid;
+    }
+    
+    .chart-actions {
+        display: none;
+    }
+    
+    .chart-controls {
+        display: none;
+    }
+}

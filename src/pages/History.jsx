@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TransactionTable from '../components/TransactionTable.jsx';
-import { BarChart3, ShoppingCart, Package, Filter, TrendingUp, TrendingDown } from 'lucide-react';
+import { BarChart3, Filter, TrendingUp, TrendingDown, List } from 'lucide-react';
 import './History.css';
 
 const History = () => {
@@ -14,7 +14,7 @@ const History = () => {
         {
             key: 'all',
             label: 'Semua',
-            icon: BarChart3,
+            icon: List,
             color: 'all'
         },
         {
@@ -67,7 +67,10 @@ const History = () => {
                 </div>
             </div>
             
-            <TransactionTable activeFilter={activeFilter} />
+            {/* Transaction Content */}
+            <div className="history-content">
+                <TransactionTable activeFilter={activeFilter} />
+            </div>
         </div>
     );
 };

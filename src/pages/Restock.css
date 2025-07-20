@@ -45,6 +45,8 @@
   padding: 0.5rem;
   border-radius: 0.75rem;
   backdrop-filter: blur(10px);
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .tab-btn {
@@ -60,6 +62,8 @@
   transition: all 0.3s ease;
   color: rgba(255, 255, 255, 0.8);
   background: transparent;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .tab-btn.active {
@@ -82,11 +86,249 @@
   border: 1px solid #e5e7eb;
 }
 
-/* Form Sections */
-.restock-form-container,
-.add-product-form-container {
-  max-width: 800px;
+/* Form Sections - Optimized 2-Column Layout */
+.restock-form-container {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 2rem;
+  max-width: 1400px;
   margin: 0 auto;
+}
+
+.add-product-form-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Add Product Form Content - 2 Column Layout */
+.add-product-form-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding-bottom: 60px; /* Reduced padding for non-sticky footer */
+}
+
+.add-product-left-column,
+.add-product-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Add Form Section Cards */
+.add-form-section {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.add-form-section:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Section Headers */
+.add-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.add-section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.product-info-card .add-section-icon {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #d97706;
+}
+
+.pricing-info-card .add-section-icon {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  color: #16a34a;
+}
+
+.stock-info-card .add-section-icon {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  color: #2563eb;
+}
+
+.supplier-info-card .add-section-icon {
+  background: linear-gradient(135deg, #ede9fe, #d8b4fe);
+  color: #9333ea;
+}
+
+.add-section-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+/* Form Rows and Fields */
+.add-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.add-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.add-form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4b5563;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.add-form-input {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  color: #1f2937;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.add-form-select {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  color: #1f2937;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.add-form-textarea {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  color: #1f2937;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.add-form-input:focus,
+.add-form-select:focus,
+.add-form-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: #fafbfc;
+}
+
+.add-form-input::placeholder,
+.add-form-textarea::placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Submit Footer - Non-sticky */
+.add-product-footer {
+  padding: 20px 0;
+  margin-top: 2rem;
+  border-top: 1px solid #f1f5f9;
+  text-align: center;
+}
+
+.add-product-submit-btn {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.add-product-submit-btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+}
+
+.add-product-submit-btn:active {
+  transform: translateY(0);
+}
+
+.add-product-submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.add-product-submit-btn:hover::before {
+  left: 100%;
+}
+
+/* Main Content Area (Left Column) */
+.main-restock-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Sidebar Summary (Right Column) */
+.restock-sidebar {
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
 }
 
 /* Section Titles - Consistent with AddTransaction */
@@ -106,7 +348,7 @@
   color: #4f46e5;
 }
 
-/* Form Sections with proper spacing */
+/* Form Sections with proper spacing - Compact Layout */
 .supplier-section,
 .product-section,
 .selected-product-section,
@@ -115,11 +357,152 @@
 .pricing-info-section,
 .stock-info-section,
 .supplier-info-section {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
   background: #f8fafc;
   border-radius: 0.75rem;
   border: 1px solid #e2e8f0;
+}
+
+/* Compact Section for Main Content */
+.supplier-section {
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.product-section {
+  margin-bottom: 1rem;
+}
+
+/* Summary Card Styles */
+.restock-summary-card {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #0ea5e9;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
+}
+
+.restock-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: #0c4a6e;
+}
+
+.restock-summary-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.restock-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(14, 165, 233, 0.2);
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0c4a6e;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #0369a1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Supplier Info in Sidebar */
+.sidebar-supplier-info {
+  background: #fefce8;
+  border: 1px solid #eab308;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sidebar-supplier-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: #92400e;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-supplier-info p {
+  margin: 0;
+  color: #a16207;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Quick Action Buttons in Sidebar */
+.sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quick-action-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.quick-action-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+}
+
+.quick-action-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.quick-action-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.quick-action-secondary {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.quick-action-secondary:hover {
+  background: #e2e8f0;
+  color: #334155;
 }
 
 /* Add Item Card - Consistent with AddTransaction */
@@ -712,27 +1095,27 @@
   margin-bottom: 2rem;
 }
 
-/* Action Buttons */
+/* Action Buttons - Simplified for 2-Column Layout */
 .action-buttons {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 1rem;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 }
 
 .btn-primary {
   background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
   color: white;
   border: none;
-  padding: 0.875rem 2rem;
+  padding: 0.875rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
-  max-width: 400px;
+  max-width: 300px;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -749,7 +1132,7 @@
 
 .btn-primary.full-width {
   width: 100%;
-  max-width: 400px;
+  max-width: 300px;
   justify-self: center;
 }
 
@@ -770,7 +1153,472 @@
   color: white;
 }
 
-/* Mobile Responsive */
+/* Specific range for 770px-776px viewport */
+@media (max-width: 776px) and (min-width: 770px) {
+  .add-product-form-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-bottom: 95px;
+  }
+
+  .add-form-section {
+    padding: 18px;
+  }
+
+  .add-section-header {
+    margin-bottom: 14px;
+  }
+
+  .add-form-row {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .add-form-input,
+  .add-form-select,
+  .add-form-textarea {
+    font-size: 0.95rem;
+    padding: 11px 15px;
+  }
+
+  .add-product-submit-btn {
+    padding: 15px 22px;
+    font-size: 0.96rem;
+  }
+}
+
+/* Mobile Responsive - Enhanced for 2-Column Layout */
+@media (max-width: 1200px) {
+  .restock-form-container {
+    grid-template-columns: 1fr 350px;
+    gap: 1.5rem;
+  }
+
+  .add-product-form-content {
+    gap: 1.5rem;
+  }
+}
+
+/* Specific range for 1025px-1050px viewport */
+@media (max-width: 1050px) and (min-width: 1025px) {
+  .restock-form-container {
+    grid-template-columns: 1fr 320px;
+    gap: 1.25rem;
+  }
+
+  .add-product-form-content {
+    gap: 1.25rem;
+    padding-bottom: 50px;
+  }
+
+  .add-form-section {
+    padding: 20px;
+  }
+
+  .add-form-row {
+    gap: 14px;
+  }
+
+  .add-product-submit-btn {
+    max-width: 350px;
+  }
+}
+
+/* Specific range for 1025px-1030px viewport - Restock Existing */
+@media (max-width: 1030px) and (min-width: 1025px) {
+  .restock-form-container {
+    grid-template-columns: 1fr 300px;
+    gap: 1rem;
+  }
+
+  .restock-header {
+    padding: 1.75rem;
+  }
+
+  .restock-title {
+    font-size: 2rem;
+  }
+
+  .tab-selector {
+    gap: 0.75rem;
+    padding: 0.4rem;
+  }
+
+  .tab-btn {
+    padding: 0.65rem 1.2rem;
+    font-size: 0.85rem;
+  }
+
+  .restock-sidebar {
+    top: 1.5rem;
+  }
+
+  .restock-summary-card {
+    padding: 1rem;
+  }
+
+  .restock-stats {
+    gap: 0.6rem;
+  }
+
+  .stat-item {
+    padding: 0.5rem;
+  }
+
+  .search-container {
+    padding: 0.8rem;
+  }
+
+  .add-item-card {
+    padding: 18px;
+  }
+
+  .consolidated-product-info {
+    padding: 16px;
+  }
+
+  .sidebar-supplier-info {
+    padding: 0.8rem;
+  }
+
+  .quick-action-btn {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Critical Fix for 960px viewport - Tab selector overflow issue */
+@media (max-width: 960px) {
+  .restock-header {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    align-items: stretch;
+  }
+
+  .restock-title {
+    font-size: 1.875rem;
+  }
+
+  .restock-title-section {
+    flex: none;
+    width: 100%;
+  }
+
+  .tab-selector {
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    flex-shrink: 0;
+  }
+
+  .tab-selector::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-btn {
+    padding: 0.65rem 1.2rem;
+    font-size: 0.85rem;
+    flex: 0 0 auto;
+    min-width: 120px;
+    white-space: nowrap;
+  }
+
+  .restock-form-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .restock-content {
+    padding: 1.5rem;
+  }
+}
+
+/* Specific range for exact viewport mentioned - fixing layout issues */
+@media (max-width: 885px) and (min-width: 770px) {
+  .restock-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .restock-title {
+    font-size: 1.75rem;
+  }
+
+  .tab-selector {
+    width: 100%;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.4rem;
+  }
+
+  .tab-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    flex: 1;
+    max-width: 150px;
+  }
+
+  .restock-form-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .restock-sidebar {
+    position: static;
+    order: -1;
+  }
+
+  .restock-content {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .restock-form-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .restock-sidebar {
+    position: static;
+    order: -1;
+  }
+
+  .restock-summary-card {
+    margin-bottom: 1rem;
+  }
+
+  .restock-stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+
+  .stat-item {
+    padding: 0.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+  }
+
+  /* Add Product Form - Single Column on Tablet */
+  .add-product-form-content {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding-bottom: 70px;
+  }
+
+  .add-form-section {
+    padding: 20px;
+  }
+
+  .add-section-header {
+    margin-bottom: 16px;
+  }
+
+  .add-form-row {
+    gap: 14px;
+  }
+}
+
+/* Specific range for 847px-779px viewport */
+@media (max-width: 847px) and (min-width: 779px) {
+  .add-product-form-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding-bottom: 60px;
+  }
+
+  .add-form-section {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .add-section-header {
+    margin-bottom: 15px;
+    gap: 11px;
+  }
+
+  .add-section-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .add-section-title {
+    font-size: 1.1rem;
+  }
+
+  .add-form-row {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .add-form-input,
+  .add-form-select,
+  .add-form-textarea {
+    padding: 11px 15px;
+    font-size: 0.96rem;
+  }
+
+  .add-product-submit-btn {
+    padding: 15px 24px;
+    font-size: 0.97rem;
+    max-width: 320px;
+  }
+}
+
+/* Specific range for 885px-769px viewport - Restock Existing */
+@media (max-width: 885px) and (min-width: 769px) {
+  .restock-form-container {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .restock-sidebar {
+    position: static;
+    order: -1;
+  }
+
+  .restock-summary-card {
+    margin-bottom: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  .restock-stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+  }
+
+  .stat-item {
+    padding: 0.6rem;
+  }
+
+  .stat-value {
+    font-size: 1.3rem;
+  }
+
+  .search-container {
+    padding: 0.9rem;
+    gap: 0.9rem;
+  }
+
+  .search-input {
+    padding: 0.8rem 1rem 0.8rem 3rem;
+    font-size: 0.95rem;
+  }
+
+  .add-item-card {
+    padding: 20px;
+    margin-bottom: 18px;
+  }
+
+  .add-item-row {
+    gap: 14px;
+  }
+
+  .product-search-container {
+    min-width: 280px;
+  }
+
+  .consolidated-product-info {
+    padding: 18px;
+  }
+
+  .product-header {
+    margin-bottom: 14px;
+  }
+
+  .quantity-price-row {
+    padding: 14px 0;
+  }
+
+  .sidebar-supplier-info {
+    padding: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .quick-action-btn {
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  .items-list-simplified {
+    padding: 18px;
+  }
+
+  .item-row-flat {
+    padding: 14px 0;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .btn-primary {
+    padding: 0.8rem 1.4rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Enhanced responsive for navbar and header area */
+@media (max-width: 800px) {
+  .restock-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    min-height: auto;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .restock-title-section {
+    flex: none;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .restock-title {
+    font-size: 1.8rem;
+    flex-wrap: wrap;
+    line-height: 1.2;
+  }
+
+  .restock-subtitle {
+    font-size: 1rem;
+    margin-top: 0.25rem;
+  }
+
+  .tab-selector {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 0.5rem;
+    padding: 0.4rem;
+  }
+
+  .tab-selector::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    min-width: fit-content;
+  }
+}
+
 @media (max-width: 768px) {
   .restock-header {
     flex-direction: column;
@@ -785,6 +1633,10 @@
 
   .restock-content {
     padding: 1.5rem;
+  }
+
+  .restock-form-container {
+    padding: 0;
   }
 
   .search-container {
@@ -853,4 +1705,86 @@
     align-items: flex-start;
     gap: 12px;
   }
+
+  .restock-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sidebar-actions {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .quick-action-btn {
+    flex: 1;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  /* Add Product Form Mobile Styles */
+  .add-product-form-content {
+    padding-bottom: 50px;
+  }
+
+  .add-form-section {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .add-section-header {
+    margin-bottom: 12px;
+    gap: 10px;
+  }
+
+  .add-section-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .add-section-title {
+    font-size: 1rem;
+  }
+
+  .add-form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .add-form-input {
+    padding: 10px 14px;
+    font-size: 0.95rem;
+  }
+
+  .add-product-footer {
+    padding: 16px 0;
+  }
+
+  .add-product-submit-btn {
+    padding: 14px 20px;
+    font-size: 0.95rem;
+  }
 }
+
+/* Additional fix for very specific viewport issues */
+@media (max-width: 776px) and (min-width: 769px) {
+  .restock-header {
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+
+  .tab-selector {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tab-btn {
+    flex: 0 1 auto;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  .restock-content {
+    padding: 1.25rem;
+  }
+}
+

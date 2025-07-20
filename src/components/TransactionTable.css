@@ -355,6 +355,91 @@
 }
 
 /* Mobile Responsive */
+@media (max-width: 880px) {
+  .table-header {
+    padding: 20px 16px;
+  }
+
+  .search-container {
+    justify-content: center;
+  }
+  
+  .search-input-wrapper {
+    max-width: 100%;
+    min-width: 250px;
+  }
+  
+  .transaction-table {
+    font-size: 0.8rem;
+  }
+
+  .transaction-table thead th {
+    padding: 12px 8px;
+    font-size: 0.75rem;
+  }
+  
+  .transaction-table tbody td {
+    padding: 12px 8px;
+    font-size: 0.8rem;
+  }
+
+  .pagination-controls {
+    padding: 16px 12px;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .pagination-controls button {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    min-width: 36px;
+  }
+
+  .pagination-controls span {
+    font-size: 0.8rem;
+    margin: 0 8px;
+  }
+}
+
+/* Specific range for tablets and small laptops */
+@media (max-width: 800px) and (min-width: 769px) {
+  .table-header {
+    padding: 18px 14px;
+  }
+
+  .search-input-wrapper {
+    max-width: 350px;
+  }
+
+  .search-input {
+    padding: 10px 10px 10px 40px;
+    font-size: 0.8rem;
+  }
+
+  .transaction-table thead th {
+    padding: 10px 6px;
+    font-size: 0.7rem;
+  }
+  
+  .transaction-table tbody td {
+    padding: 10px 6px;
+    font-size: 0.75rem;
+  }
+
+  .pagination-controls {
+    padding: 14px 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .pagination-controls button {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    min-width: 32px;
+  }
+}
+
 @media (max-width: 768px) {
   .table-header {
     padding: 16px;

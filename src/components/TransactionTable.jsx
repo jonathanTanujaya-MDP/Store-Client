@@ -206,33 +206,33 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
       
       <div className="table-wrapper">
         <table className="transaction-table">
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : (
-                    <div
-                      {...{
-                        onClick: header.column.getToggleSortingHandler(),
-                        className: header.column.getCanSort() ? 'cursor-pointer select-none' : '',
-                      }}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {{
-                        asc: ' 🔼',
-                        desc: ' 🔽',
-                      }[header.column.getIsSorted()] ?? null}
-                    </div>
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <div
+                        {...{
+                          onClick: header.column.getToggleSortingHandler(),
+                          className: header.column.getCanSort() ? 'cursor-pointer select-none' : '',
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: ' 🔼',
+                          desc: ' 🔽',
+                        }[header.column.getIsSorted()] ?? null}
+                      </div>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
         <tbody>
           {table.getRowModel().rows.length > 0 ? (
             table.getRowModel().rows.map(row => (
@@ -261,7 +261,8 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
               </td>
             </tr>
           )}
-        </tbody>        </table>
+        </tbody>
+        </table>
       </div>
       
       <div className="pagination-controls">
