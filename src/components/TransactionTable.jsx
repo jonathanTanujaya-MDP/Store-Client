@@ -166,7 +166,7 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
       cell: ({ row }) => (
         <div className="table-actions">
           <button 
-            onClick={() => handleViewDetails(row.original)} 
+            onClick={() => handleViewTransaction(row.original)} 
             className="table-action-button view-button"
             title="Lihat Detail"
           >
