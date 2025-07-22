@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useReactTable, getCoreRowModel, flexRender, getPaginationRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table';
 import { useTransactions } from '../context/TransactionContext.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 import { Eye, Search, AlertCircle, RefreshCw, Database } from 'lucide-react';
 import TransactionDetailModal from './TransactionDetailModal.jsx';
 import { formatCurrency } from '../utils/currency.js';
@@ -8,10 +9,15 @@ import './TransactionTable.css';
 
 const TransactionTable = ({ activeFilter = 'all' }) => {
   const { transactions, loading, error } = useTransactions();
+  const { user } = useAuth();
   const [sorting, setSorting] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Get user role
+  const currentUserRole = user?.role || JSON.parse(localStorage.getItem('userData') || '{}')?.role || 'admin';
+  const isOwner = currentUserRole === 'owner';
 
   // Loading component with skeleton
   const LoadingSkeleton = () => (
@@ -96,8 +102,8 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
     setSelectedTransaction(null);
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    const baseColumns = [
       {
         accessorKey: 'transaction_id',
         header: () => 'ID',
@@ -138,36 +144,40 @@ const TransactionTable = ({ activeFilter = 'all' }) => {
           const amount = info.getValue() || info.row.original.total || 0;
           return formatCurrency(amount);
         },
-      },
-      {
+      }
+    ];
+
+    // Add profit column only for owners
+    if (isOwner) {
+      baseColumns.push({
         accessorKey: 'total_profit',
         header: () => 'Profit',
         cell: info => {
           const profit = info.getValue() || info.row.original.profit || 0;
           return formatCurrency(profit);
         },
-      },
-      {
-        id: 'actions',
-        header: () => 'Aksi',
-        cell: (info) => (
-          <div className="table-actions">
-            <button 
-              className="view-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleViewTransaction(info.row.original);
-              }}
-              title="Lihat Detail"
-            >
-              <Eye size={14} />
-            </button>
-          </div>
-        ),
-      },
-    ],
-    []
-  );
+      });
+    }
+
+    // Add actions column
+    baseColumns.push({
+      id: 'actions',
+      header: () => 'Actions',
+      cell: ({ row }) => (
+        <div className="table-actions">
+          <button 
+            onClick={() => handleViewDetails(row.original)} 
+            className="table-action-button view-button"
+            title="Lihat Detail"
+          >
+            <Eye size={16} />
+          </button>
+        </div>
+      ),
+    });
+
+    return baseColumns;
+  }, [isOwner]);
 
   const table = useReactTable({
     data: filteredTransactions,

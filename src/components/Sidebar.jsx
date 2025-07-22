@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Home, Package, ShoppingCart, BarChart2, Bell, PlusCircle, RotateCcw } from 'lucide-react';
+import { Home, Package, ShoppingCart, BarChart2, Bell, PlusCircle, RotateCcw, LogOut, User } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
 import { useUIScale } from '../context/UIScaleContext';
+import { useAuth } from '../context/AuthContext.jsx';
 import './Sidebar.css';
 
 const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
     const { lowStockCount } = useProducts();
     const { scaleFactor, setScaleFactor } = useUIScale();
+    const { user, logout } = useAuth();
 
     const sidebarRef = useRef(null);
     const [sidebarWidth, setSidebarWidth] = useState(240);
@@ -40,6 +42,13 @@ const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
         }
     };
 
+    const handleLogout = () => {
+        logout();
+        if (isMobile && onMobileClose) {
+            onMobileClose(); // Close mobile menu
+        }
+    };
+
     const handleNavClick = () => {
         if (isMobile && onMobileClose) {
             onMobileClose(); // Close mobile menu when nav item is clicked
@@ -65,6 +74,13 @@ const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
                 <div className="app-title-container">
                     <h1>Manajemen Stock</h1>
                 </div>
+                {user && (
+                    <div className="user-info">
+                        <User size={16} />
+                        <span>{user.username}</span>
+                        <span className="user-role">({user.role})</span>
+                    </div>
+                )}
             </div>
             <nav className="sidebar-nav">
                 <Link to="/" className="sidebar-nav-item" onClick={handleNavClick}>
@@ -95,6 +111,11 @@ const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
                     <Bell className="sidebar-icon" />
                     <span>Stock Alerts {lowStockCount > 0 && <span className="notification-dot"></span>}</span>
                 </Link>
+                <div className="sidebar-divider"></div>
+                <button onClick={handleLogout} className="sidebar-logout-btn">
+                    <LogOut className="sidebar-icon" />
+                    <span>Logout</span>
+                </button>
                 <div className="sidebar-zoom-controls">
                     <button onClick={handleZoomOut} className="zoom-button">-</button>
                     <span className="zoom-level">{(scaleFactor * 100).toFixed(0)}%</span>

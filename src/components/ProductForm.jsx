@@ -3,20 +3,38 @@ import React, { useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Package, DollarSign, ClipboardList, Minus, Plus, Loader, CheckCircle, XCircle } from 'lucide-react'; // Import icons
+import { Package, DollarSign, ClipboardList, Minus, Plus, Loader, CheckCircle, XCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext.jsx';
 import toast from 'react-hot-toast';
 import './ProductForm.css';
 
-const schema = yup.object().shape({
-  name: yup.string().required('Product Name is required'),
-  purchase_price: yup.number().typeError('Must be a number').positive('Must be positive').required('Purchase Price is required'),
-  selling_price: yup.number().typeError('Must be a number').positive('Must be positive').required('Selling Price is required'),
-  stock: yup.number().typeError('Must be a number').integer('Must be an integer').min(0, 'Cannot be negative').required('Stock is required'),
-  min_stock: yup.number().typeError('Must be a number').integer('Must be an integer').min(0, 'Cannot be negative').required('Minimum Stock is required'),
-  category: yup.string().required('Category is required'),
-});
+// Create dynamic schema based on user role
+const createSchema = (isOwner) => {
+  const baseSchema = {
+    name: yup.string().required('Product Name is required'),
+    selling_price: yup.number().typeError('Must be a number').positive('Must be positive').required('Selling Price is required'),
+    stock: yup.number().typeError('Must be a number').integer('Must be an integer').min(0, 'Cannot be negative').required('Stock is required'),
+    min_stock: yup.number().typeError('Must be a number').integer('Must be an integer').min(0, 'Cannot be negative').required('Minimum Stock is required'),
+    category: yup.string().required('Category is required'),
+  };
+
+  // Add purchase_price validation only for owners
+  if (isOwner) {
+    baseSchema.purchase_price = yup.number().typeError('Must be a number').positive('Must be positive').required('Purchase Price is required');
+  }
+
+  return yup.object().shape(baseSchema);
+};
 
 const ProductForm = ({ product, onSubmit, onClose }) => {
+  const { user } = useAuth();
+  
+  // Get user role - from auth context or localStorage
+  const currentUserRole = user?.role || JSON.parse(localStorage.getItem('userData') || '{}')?.role || 'admin';
+  const isOwner = currentUserRole === 'owner';
+  
+  const schema = createSchema(isOwner);
+  
   const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting }, reset } = useForm({
     resolver: yupResolver(schema),
   });
@@ -54,6 +72,10 @@ const ProductForm = ({ product, onSubmit, onClose }) => {
   }, [handleAutoSave, watch]);
 
   const handleFormSubmit = (data) => {
+    // For admin users, preserve the existing purchase_price if editing a product
+    if (!isOwner && product && product.purchase_price) {
+      data.purchase_price = product.purchase_price;
+    }
     onSubmit(data);
   };
 
@@ -72,14 +94,17 @@ const ProductForm = ({ product, onSubmit, onClose }) => {
             {errors.name && <p className="error-message">{errors.name.message}</p>}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="purchase_price">Purchase Price <span className="required-indicator">*</span></label>
-            <div className="input-with-icon">
-              <DollarSign className="input-icon" />
-              <input id="purchase_price" type="number" step="0.01" {...register('purchase_price')} className={`form-input ${errors.purchase_price ? 'input-error' : ''}`} placeholder="Enter purchase price" />
+          {/* Only show purchase price for owners */}
+          {isOwner && (
+            <div className="form-group">
+              <label htmlFor="purchase_price">Purchase Price <span className="required-indicator">*</span></label>
+              <div className="input-with-icon">
+                <DollarSign className="input-icon" />
+                <input id="purchase_price" type="number" step="0.01" {...register('purchase_price')} className={`form-input ${errors.purchase_price ? 'input-error' : ''}`} placeholder="Enter purchase price" />
+              </div>
+              {errors.purchase_price && <p className="error-message">{errors.purchase_price.message}</p>}
             </div>
-            {errors.purchase_price && <p className="error-message">{errors.purchase_price.message}</p>}
-          </div>
+          )}
 
           <div className="form-group">
             <label htmlFor="selling_price">Selling Price <span className="required-indicator">*</span></label>

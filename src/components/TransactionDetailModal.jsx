@@ -1,10 +1,17 @@
 import React from 'react';
 import { X, Calendar, Package, Hash, DollarSign, User, ShoppingCart, Truck, Building, PlusCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext.jsx';
 import { formatCurrency } from '../utils/currency.js';
 import './TransactionDetailModal.css';
 
 const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
+    const { user } = useAuth();
+    
     if (!isOpen || !transaction) return null;
+
+    // Get user role
+    const currentUserRole = user?.role || JSON.parse(localStorage.getItem('userData') || '{}')?.role || 'admin';
+    const isOwner = currentUserRole === 'owner';
 
     const formatDate = (dateString) => {
         if (!dateString) return 'Tanggal tidak tersedia';
@@ -93,7 +100,6 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
                 <div className={getModalHeaderClass(transaction.transaction_type)}>
                     <div className="modal-title-section">
                         <h2 className="modal-title">
-                            <TransactionIcon size={24} />
                             {isRestock ? 'Detail Restock Inventori' : 'Detail Transaksi Penjualan'}
                         </h2>
                         <div className="transaction-id-badge">
@@ -103,10 +109,6 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction }) => {
                     <div className="modal-header-actions">
                         <div 
                             className={`transaction-type-badge ${isRestock ? 'restock-badge' : 'sales-badge'}`}
-                            style={{ 
-                                backgroundColor: getTransactionTypeColor(transaction.transaction_type),
-                                color: 'white'
-                            }}
                         >
                             {getTransactionTypeLabel(transaction.transaction_type)}
                         </div>

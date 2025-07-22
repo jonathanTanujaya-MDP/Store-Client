@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useReactTable, getCoreRowModel, flexRender, getPaginationRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table';
 import { useProducts } from '../context/ProductContext.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 import ProductForm from './ProductForm.jsx';
-import toast from 'react-hot-toast'; // Import toast
-import ConfirmationDialog from './ConfirmationDialog.jsx'; // Import ConfirmationDialog
-import { formatCurrency } from '../utils/currency.js'; // Import currency formatter
+import toast from 'react-hot-toast';
+import ConfirmationDialog from './ConfirmationDialog.jsx';
+import { formatCurrency } from '../utils/currency.js';
 import './ProductTable.css';
 
 const ProductTable = () => {
-  const { products, loading, error, fetchProducts, updateProduct, deleteProduct } = useProducts();
+  const { products, loading, error, fetchProducts, updateProduct, deleteProduct, userRole } = useProducts();
+  const { user } = useAuth();
   const [sorting, setSorting] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [productToDeleteId, setProductToDeleteId] = useState(null);
+
+  // Get user role - priority: from products context, then from auth context, then from localStorage
+  const currentUserRole = userRole || user?.role || JSON.parse(localStorage.getItem('userData') || '{}')?.role || 'admin';
+  const isOwner = currentUserRole === 'owner';
+  const isAdmin = currentUserRole === 'admin';
 
   useEffect(() => {
     fetchProducts();
@@ -31,6 +38,11 @@ const ProductTable = () => {
   };
 
   const handleDeleteClick = (productId) => {
+    // Only allow owner to delete
+    if (!isOwner) {
+      toast.error('Access denied. Only owners can delete products.');
+      return;
+    }
     setProductToDeleteId(productId);
     setShowConfirmDialog(true);
   };
@@ -69,8 +81,8 @@ const ProductTable = () => {
     setEditingProduct(null);
   };
 
-  const columns = React.useMemo(
-    () => [
+  const columns = React.useMemo(() => {
+    const baseColumns = [
       {
         accessorKey: 'name',
         header: () => 'Product Name',
@@ -102,30 +114,41 @@ const ProductTable = () => {
         accessorKey: 'minimum_stock',
         header: () => 'Min Stock',
         cell: info => info.getValue(),
-      },
-      {
+      }
+    ];
+
+    // Add purchase price column only for owners
+    if (isOwner) {
+      baseColumns.push({
         accessorKey: 'purchase_price',
         header: () => 'Purchase Price',
         cell: info => formatCurrency(info.getValue()),
-      },
-      {
-        accessorKey: 'selling_price',
-        header: () => 'Selling Price',
-        cell: info => formatCurrency(info.getValue()),
-      },
-      {
-        id: 'actions',
-        header: () => 'Actions',
-        cell: ({ row }) => (
-          <div className="table-actions">
-            <button onClick={() => handleEditClick(row.original)} className="table-action-button edit-button">Edit</button>
+      });
+    }
+
+    // Add selling price for everyone
+    baseColumns.push({
+      accessorKey: 'selling_price',
+      header: () => 'Selling Price',
+      cell: info => formatCurrency(info.getValue()),
+    });
+
+    // Add actions column with role-based buttons
+    baseColumns.push({
+      id: 'actions',
+      header: () => 'Actions',
+      cell: ({ row }) => (
+        <div className="table-actions">
+          <button onClick={() => handleEditClick(row.original)} className="table-action-button edit-button">Edit</button>
+          {isOwner && (
             <button onClick={() => handleDeleteClick(row.original.id)} className="table-action-button delete-button">Delete</button>
-          </div>
-        ),
-      },
-    ],
-    [updateProduct, deleteProduct] // Add dependencies for memoization
-  );
+          )}
+        </div>
+      ),
+    });
+
+    return baseColumns;
+  }, [updateProduct, deleteProduct, isOwner, currentUserRole]);
 
   const table = useReactTable({
     data: products,

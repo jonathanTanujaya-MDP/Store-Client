@@ -149,43 +149,39 @@ const AddTransaction = () => {
       </div>
       
       <form onSubmit={handleSubmit} className="transaction-form">
-        {/* Customer Information Section */}
-        <div className="customer-section">
-          <div className="section-title">
-            <User size={20} />
-            <span>Customer Information</span>
-          </div>
-          <div className="form-group">
-            <label htmlFor="customerName">Customer Name <span className="required-indicator">*</span></label>
-            <div className="input-with-icon">
-              <User className="input-icon" />
-              <input
-                id="customerName"
-                type="text"
-                className="form-input customer-input"
-                placeholder="Enter customer name"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                required
-              />
+        {/* Customer & Product Search Combined Section */}
+        <div className="customer-search-combined">
+          <div className="combined-inputs-row">
+            {/* Customer Name Input */}
+            <div className="customer-input-group">
+              <label htmlFor="customerName" className="section-label">
+                <User size={16} style={{display: 'inline', marginRight: '0.5rem'}} />
+                Customer Name <span className="required-indicator">*</span>
+              </label>
+              <div className="customer-input-wrapper">
+                <User className="input-icon" size={20} />
+                <input
+                  id="customerName"
+                  type="text"
+                  className="customer-input"
+                  placeholder="Search or enter customer name..."
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  required
+                  autoComplete="off"
+                />
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Items Section */}
-        <div className="items-section">
-          <div className="section-title">
-            <ShoppingCart size={20} />
-            <span>Transaction Items ({items.length})</span>
-          </div>
-
-          {/* Add Item Card - Compact Design */}
-          <div className="add-item-card">
-            <div className="add-item-row">
-              {/* Product Search with Autocomplete */}
+            {/* Product Search Input */}
+            <div className="search-input-group">
+              <label className="section-label">
+                <Search size={16} style={{display: 'inline', marginRight: '0.5rem'}} />
+                Search & Add Product
+              </label>
               <div className="product-search-container">
                 <div className="search-input-wrapper">
-                  <Search className="search-icon" size={16} />
+                  <Search className="input-icon" size={20} />
                   <input
                     type="text"
                     className="product-search-input"
@@ -216,85 +212,95 @@ const AddTransaction = () => {
                   )}
                 </div>
               </div>
-
-              {/* Quantity Control - Inline */}
-              <div className="quantity-control-inline">
-                <button 
-                  type="button" 
-                  onClick={() => handleQuantityChange(currentItem.quantity - 1)}
-                  className="qty-btn"
-                  disabled={currentItem.quantity <= 1}
-                >
-                  <Minus size={14} />
-                </button>
-                <input
-                  type="number"
-                  className="qty-input"
-                  value={currentItem.quantity}
-                  onChange={(e) => handleQuantityChange(e.target.value)}
-                  min="1"
-                  max={currentItem.product ? currentItem.product.stock_quantity : 999}
-                />
-                <button 
-                  type="button" 
-                  onClick={() => handleQuantityChange(currentItem.quantity + 1)}
-                  className="qty-btn"
-                  disabled={currentItem.product && currentItem.quantity >= currentItem.product.stock_quantity}
-                >
-                  <Plus size={14} />
-                </button>
-              </div>
             </div>
+          </div>
 
-            {/* Consolidated Product Info */}
-            {currentItem.product && (
-              <div className="consolidated-product-info">
-                <div className="product-header">
-                  <div className="product-main-info">
-                    <h4>{currentItem.product.name}</h4>
-                    <div className="product-meta">
-                      <span>Model: {currentItem.product.id || 'N/A'}</span>
-                      <span>Stock: {currentItem.product.stock_quantity} units</span>
-                      <span>Category: {currentItem.product.category || 'General'}</span>
-                    </div>
-                  </div>
-                  <div className="product-price-main">
-                    {formatCurrency(currentItem.product.selling_price)}
+          {/* Consolidated Product Info & Quantity Control */}
+          {currentItem.product && (
+            <div className="consolidated-product-info">
+              <div className="product-header">
+                <div className="product-main-info">
+                  <h4>{currentItem.product.name}</h4>
+                  <div className="product-meta">
+                    <span>Model: {currentItem.product.id || 'N/A'}</span>
+                    <span>Stock: {currentItem.product.stock_quantity} units</span>
+                    <span>Category: {currentItem.product.category || 'General'}</span>
                   </div>
                 </div>
+                <div className="product-price-main">
+                  {formatCurrency(currentItem.product.selling_price)}
+                </div>
+              </div>
 
-                <div className="quantity-price-row">
+              <div className="add-item-row">
+                {/* Quantity Control - Inline */}
+                <div className="quantity-control-inline">
+                  <button 
+                    type="button" 
+                    onClick={() => handleQuantityChange(currentItem.quantity - 1)}
+                    className="qty-btn"
+                    disabled={currentItem.quantity <= 1}
+                  >
+                    <Minus size={14} />
+                  </button>
+                  <input
+                    type="number"
+                    className="qty-input"
+                    value={currentItem.quantity}
+                    onChange={(e) => handleQuantityChange(e.target.value)}
+                    min="1"
+                    max={currentItem.product ? currentItem.product.stock_quantity : 999}
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => handleQuantityChange(currentItem.quantity + 1)}
+                    className="qty-btn"
+                    disabled={currentItem.product && currentItem.quantity >= currentItem.product.stock_quantity}
+                  >
+                    <Plus size={14} />
+                  </button>
+                </div>
+
+                <div className="quantity-price-row" style={{borderTop: 'none', padding: '0', marginLeft: '1rem'}}>
                   <div className="quantity-simple">
-                    <span>Qty:</span>
-                    <span className="quantity-value">{currentItem.quantity}</span>
-                    <span>•</span>
+                    <span>Total:</span>
                     <span className="subtotal-simple">{formatCurrency(currentItem.product.selling_price * currentItem.quantity)}</span>
                   </div>
                 </div>
-
-                {/* Enhanced Add Button */}
-                <button 
-                  type="button" 
-                  onClick={addItemToList}
-                  className="add-btn-enhanced"
-                  disabled={!currentItem.product}
-                >
-                  Add Item
-                </button>
               </div>
-            )}
 
-            {/* Error Message */}
-            {currentItem.product && currentItem.quantity > currentItem.product.stock_quantity && (
-              <div className="error-message">
-                <AlertTriangle size={14} />
-                Insufficient stock! Available: {currentItem.product.stock_quantity}
-              </div>
-            )}
-          </div>
+              {/* Enhanced Add Button */}
+              <button 
+                type="button" 
+                onClick={addItemToList}
+                className="add-btn-enhanced"
+                disabled={!currentItem.product}
+              >
+                <Plus size={16} />
+                Add Item to Transaction
+              </button>
 
-          {/* Simplified Items List */}
-          {items.length > 0 && (
+              {/* Error Message */}
+              {currentItem.product && currentItem.quantity > currentItem.product.stock_quantity && (
+                <div className="error-message">
+                  <AlertTriangle size={14} />
+                  Insufficient stock! Available: {currentItem.product.stock_quantity}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Items Section - Show added items */}
+        {items.length > 0 && (
+          <div className="items-section">
+            <div className="section-title">
+              <Package size={20} />
+              <span>Transaction Items</span>
+              <div className="items-count">{items.length} items</div>
+            </div>
+
+            {/* Simplified Items List */}
             <div className="items-list-simplified">
               <div className="items-list-header">
                 <h4>Added Items</h4>
@@ -325,35 +331,54 @@ const AddTransaction = () => {
                 ))}
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Total Summary Section */}
         <div className="total-summary-section">
-          <div className="summary-row">
-            <span className="summary-label">Items Count:</span>
-            <span className="summary-value">{items.length} item{items.length !== 1 ? 's' : ''}</span>
+          <div className="summary-cards-container">
+            <div className="summary-card">
+              <div className="summary-card-icon">
+                <Package size={24} />
+              </div>
+              <div className="summary-card-content">
+                <div className="summary-card-label">Total Items</div>
+                <div className="summary-card-value">{items.length}</div>
+              </div>
+            </div>
+            <div className="summary-card total-amount-card">
+              <div className="summary-card-icon">
+                <DollarSign size={24} />
+              </div>
+              <div className="summary-card-content">
+                <div className="summary-card-label">Total Amount</div>
+                <div className="summary-card-value">{formatCurrency(totalAmount)}</div>
+              </div>
+            </div>
           </div>
+          
           <div className="summary-row total-row">
-            <span className="summary-label">Total Amount:</span>
+            <span className="summary-label">Final Total:</span>
             <span className="summary-value">{formatCurrency(totalAmount)}</span>
           </div>
         </div>
 
         {/* Submit Button */}
-        <button type="submit" className="submit-button" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              <Loader className="spinner" size={20} />
-              Processing...
-            </>
-          ) : (
-            <>
-              <CheckCircle size={20} />
-              Submit Transaction
-            </>
-          )}
-        </button>
+        <div className="submit-button-container">
+          <button type="submit" className="submit-button" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader className="spinner" size={20} />
+                Processing Transaction...
+              </>
+            ) : (
+              <>
+                <CheckCircle className="submit-icon" size={20} />
+                Save Transaction
+              </>
+            )}
+          </button>
+        </div>
       </form>
     </div>
   );

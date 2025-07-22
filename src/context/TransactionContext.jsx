@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
-import toast from 'react-hot-toast'; // Import toast
+import apiClient from '../utils/apiClient';
+import { useAuth } from './AuthContext.jsx';
+import toast from 'react-hot-toast';
 import { API_ENDPOINTS } from '../config/api';
 
 const TransactionContext = createContext();
@@ -11,14 +12,16 @@ export const TransactionProvider = ({ children }) => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const API_URL = API_ENDPOINTS.transactions;
+  
+  const { isAuthenticated } = useAuth();
 
   const fetchTransactions = async () => {
+    if (!isAuthenticated()) return;
+    
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(API_URL);
+      const response = await apiClient.get('/api/transactions');
       setTransactions(response.data);
     } catch (err) {
       console.error('Error fetching transactions:', err);
@@ -29,10 +32,12 @@ export const TransactionProvider = ({ children }) => {
   };
 
   const clearAllTransactions = async () => {
+    if (!isAuthenticated()) return;
+    
     setLoading(true);
     setError(null);
     try {
-      await axios.delete(`${API_URL}/clear`);
+      await apiClient.delete('/api/transactions/clear');
       setTransactions([]); // Clear transactions in state
       toast.success('All transaction history cleared!');
     } catch (err) {
@@ -45,9 +50,12 @@ export const TransactionProvider = ({ children }) => {
     }
   };
 
+  // Only fetch transactions if authenticated
   useEffect(() => {
-    fetchTransactions();
-  }, []);
+    if (isAuthenticated()) {
+      fetchTransactions();
+    }
+  }, [isAuthenticated]);
 
   return (
     <TransactionContext.Provider

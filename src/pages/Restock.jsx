@@ -2,13 +2,16 @@
 import React, { useState } from 'react';
 import { Package, Plus, TrendingUp, Search, Minus, User, ShoppingCart, CheckCircle, DollarSign } from 'lucide-react';
 import { useProducts } from '../context/ProductContext.jsx';
+import { useTransactions } from '../context/TransactionContext.jsx';
 import { formatCurrency } from '../utils/currency.js';
+import { API_ENDPOINTS } from '../config/api.js';
 import toast from 'react-hot-toast';
 import './Restock.css';
 
 const Restock = () => {
   const [activeTab, setActiveTab] = useState('restock');
-  const { products } = useProducts();
+  const { products, fetchProducts, addProduct } = useProducts();
+  const { fetchTransactions } = useTransactions();
   
   // Restock form state
   const [supplier, setSupplier] = useState('');
@@ -81,8 +84,39 @@ const Restock = () => {
     }
     
     try {
-      // Implement restock logic here
+      // Prepare data for API call
+      const restockData = {
+        supplier_name: supplier || 'Unknown Supplier',
+        items: validItems.map(item => ({
+          product_id: item.product.id,
+          quantity: item.quantity,
+          unit_cost: item.product.purchase_price || 0 // Use purchase price as unit cost
+        }))
+      };
+
+      // Send to backend
+      const response = await fetch(API_ENDPOINTS.restock, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(restockData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to restock products');
+      }
+
+      const result = await response.json();
       toast.success(`Successfully restocked ${validItems.length} item(s)`);
+      
+      // Refresh product data to show updated stock quantities
+      await fetchProducts();
+      
+      // Refresh transaction history to show new restock entries
+      await fetchTransactions();
+      
       // Reset form
       setRestockItems([]);
       setCurrentRestockItem({
@@ -93,7 +127,8 @@ const Restock = () => {
       });
       setSupplier('');
     } catch (error) {
-      toast.error('Failed to restock products. Please try again.');
+      console.error('Restock error:', error);
+      toast.error(`Failed to restock products: ${error.message}`);
     }
   };
 
@@ -104,8 +139,21 @@ const Restock = () => {
     }
     
     try {
-      // Implement add product logic here
+      // Prepare data for API call
+      const productData = {
+        name: newProduct.name,
+        category: newProduct.category || '',
+        purchase_price: parseFloat(newProduct.buyingPrice) || 0,
+        selling_price: parseFloat(newProduct.sellingPrice) || 0,
+        stock: newProduct.initialStock || 0, // This will be mapped to stock_quantity in context
+        min_stock: newProduct.minStock || 5, // This will be mapped to minimum_stock in context
+      };
+
+      await addProduct(productData);
+      await fetchProducts(); // Refresh product list
+      
       toast.success(`Successfully added new product: ${newProduct.name}`);
+      
       // Reset form
       setNewProduct({
         name: '',
@@ -117,7 +165,8 @@ const Restock = () => {
         supplier: ''
       });
     } catch (error) {
-      toast.error('Failed to add new product. Please try again.');
+      console.error('Add product error:', error);
+      toast.error(`Failed to add product: ${error.message}`);
     }
   };
 
