@@ -1,21 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Home, Package, ShoppingCart, BarChart2, Bell, PlusCircle, RotateCcw, LogOut, User, RefreshCw } from 'lucide-react';
+import { Home, Package, ShoppingCart, BarChart2, Bell, PlusCircle, RotateCcw, LogOut, User, UserCheck } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
 import { useUIScale } from '../context/UIScaleContext';
 import { useAuth } from '../context/AuthContext.jsx';
-import toast from 'react-hot-toast';
 import './Sidebar.css';
 
 const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
     const { lowStockCount } = useProducts();
     const { scaleFactor, setScaleFactor } = useUIScale();
-    const { user, logout, switchAccount } = useAuth();
+    const { user, logout, quickSwitch, isLoading } = useAuth();
+    const [showQuickSwitch, setShowQuickSwitch] = useState(false);
 
     const sidebarRef = useRef(null);
     const [sidebarWidth, setSidebarWidth] = useState(240);
     const [isResizing, setIsResizing] = useState(false);
-    const [isSwitching, setIsSwitching] = useState(false);
 
     const handleZoomIn = () => {
         setScaleFactor(prev => Math.min(prev + 0.1, 1.5));
@@ -52,20 +51,12 @@ const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
     };
 
     const handleQuickSwitch = async () => {
-        const targetAccount = user?.username === 'admin' ? 'owner' : 'admin';
-        const password = 'password'; // Same password for both accounts
+        const targetAccount = user?.role === 'admin' ? 'owner' : 'admin';
+        const password = 'password'; // Since both accounts use the same password
         
-        setIsSwitching(true);
-        try {
-            const result = await switchAccount(targetAccount, password);
-            if (result.success) {
-                // Account switched successfully
-                console.log(`Switched to ${targetAccount}`);
-            }
-        } catch (error) {
-            toast.error('Failed to switch account');
-        } finally {
-            setIsSwitching(false);
+        const result = await quickSwitch(targetAccount, password);
+        if (result.success) {
+            setShowQuickSwitch(false);
         }
     };
 
@@ -99,14 +90,6 @@ const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
                         <User size={16} />
                         <span>{user.username}</span>
                         <span className="user-role">({user.role})</span>
-                        <button 
-                            onClick={handleQuickSwitch}
-                            disabled={isSwitching}
-                            className="quick-switch-btn"
-                            title={`Switch to ${user.username === 'admin' ? 'owner' : 'admin'}`}
-                        >
-                            <RefreshCw size={12} className={isSwitching ? 'spinning' : ''} />
-                        </button>
                     </div>
                 )}
             </div>
@@ -139,6 +122,28 @@ const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
                     <Bell className="sidebar-icon" />
                     <span>Stock Alerts {lowStockCount > 0 && <span className="notification-dot"></span>}</span>
                 </Link>
+                <div className="sidebar-divider"></div>
+                
+                {/* User Profile & Quick Switch */}
+                <div className="sidebar-user-section">
+                    <div className="sidebar-user-info">
+                        <User className="sidebar-icon" />
+                        <span>{user?.username} ({user?.role})</span>
+                    </div>
+                    
+                    <button 
+                        onClick={handleQuickSwitch}
+                        className="sidebar-quick-switch-btn"
+                        disabled={isLoading}
+                        title={`Switch to ${user?.role === 'admin' ? 'owner' : 'admin'}`}
+                    >
+                        <UserCheck className="sidebar-icon" />
+                        <span>
+                            {isLoading ? 'Switching...' : `Switch to ${user?.role === 'admin' ? 'Owner' : 'Admin'}`}
+                        </span>
+                    </button>
+                </div>
+                
                 <div className="sidebar-divider"></div>
                 <button onClick={handleLogout} className="sidebar-logout-btn">
                     <LogOut className="sidebar-icon" />

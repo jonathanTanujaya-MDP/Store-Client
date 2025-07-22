@@ -35,13 +35,10 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      // Clear any existing session first to prevent conflicts
+      // Clear any existing tokens first
       localStorage.removeItem('authToken');
       localStorage.removeItem('userData');
       setUser(null);
-
-      // Small delay to ensure clean state
-      await new Promise(resolve => setTimeout(resolve, 100));
 
       const response = await fetch(`${API_ENDPOINTS.auth}/login`, {
         method: 'POST',
@@ -86,27 +83,18 @@ export const AuthProvider = ({ children }) => {
     // Clear state immediately
     setUser(null);
     
-    // Clear any cached data
-    sessionStorage.clear();
+    // Clear any cached API responses
+    if (window.sessionStorage) {
+      window.sessionStorage.clear();
+    }
     
     toast.info('Logged out successfully');
   };
 
-  const isAuthenticated = () => {
-    return !!user && !!localStorage.getItem('authToken');
-  };
-
-  // Quick switch function for account switching
-  const switchAccount = async (username, password) => {
+  const quickSwitch = async (username, password) => {
     try {
       setIsLoading(true);
       
-      // Don't show logout message for switching
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userData');
-      setUser(null);
-
-      // Quick login without extra delays
       const response = await fetch(`${API_ENDPOINTS.auth}/login`, {
         method: 'POST',
         headers: {
@@ -117,35 +105,39 @@ export const AuthProvider = ({ children }) => {
 
       if (!response.ok) {
         const error = await response.json();
-        const errorMessage = error.error || error.message || 'Switch account failed';
-        toast.error(errorMessage);
-        return { success: false, error: errorMessage };
+        throw new Error(error.error || error.message || 'Switch failed');
       }
 
       const data = await response.json();
       const { token, user: userData } = data;
 
+      // Update localStorage
       localStorage.setItem('authToken', token);
       localStorage.setItem('userData', JSON.stringify(userData));
+      
+      // Update state
       setUser(userData);
       
-      toast.success(`Switched to ${userData.username}`);
+      toast.success(`Switched to ${userData.role}: ${userData.username}`);
       return { success: true, user: userData };
     } catch (error) {
-      console.error('Switch account error:', error);
-      const errorMessage = error.message || 'Network error occurred';
-      toast.error(errorMessage);
-      return { success: false, error: errorMessage };
+      console.error('Quick switch error:', error);
+      toast.error(error.message || 'Failed to switch account');
+      return { success: false, error: error.message };
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const isAuthenticated = () => {
+    return !!user && !!localStorage.getItem('authToken');
   };
 
   const value = {
     user,
     login,
     logout,
-    switchAccount,
+    quickSwitch,
     isAuthenticated,
     isLoading
   };

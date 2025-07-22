@@ -18,7 +18,12 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    host: true
+    host: true,
+    // Fix for React Router - fallback to index.html for all routes
+    middlewareMode: false,
+    fs: {
+      strict: false
+    }
   },
   preview: {
     port: 5173,
