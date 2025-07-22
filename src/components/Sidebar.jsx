@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Home, Package, ShoppingCart, BarChart2, Bell, PlusCircle, RotateCcw, LogOut, User } from 'lucide-react';
+import { Home, Package, ShoppingCart, BarChart2, Bell, PlusCircle, RotateCcw, LogOut, User, RefreshCw } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
 import { useUIScale } from '../context/UIScaleContext';
 import { useAuth } from '../context/AuthContext.jsx';
+import toast from 'react-hot-toast';
 import './Sidebar.css';
 
 const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
     const { lowStockCount } = useProducts();
     const { scaleFactor, setScaleFactor } = useUIScale();
-    const { user, logout } = useAuth();
+    const { user, logout, switchAccount } = useAuth();
 
     const sidebarRef = useRef(null);
     const [sidebarWidth, setSidebarWidth] = useState(240);
     const [isResizing, setIsResizing] = useState(false);
+    const [isSwitching, setIsSwitching] = useState(false);
 
     const handleZoomIn = () => {
         setScaleFactor(prev => Math.min(prev + 0.1, 1.5));
@@ -49,6 +51,24 @@ const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
         }
     };
 
+    const handleQuickSwitch = async () => {
+        const targetAccount = user?.username === 'admin' ? 'owner' : 'admin';
+        const password = 'password'; // Same password for both accounts
+        
+        setIsSwitching(true);
+        try {
+            const result = await switchAccount(targetAccount, password);
+            if (result.success) {
+                // Account switched successfully
+                console.log(`Switched to ${targetAccount}`);
+            }
+        } catch (error) {
+            toast.error('Failed to switch account');
+        } finally {
+            setIsSwitching(false);
+        }
+    };
+
     const handleNavClick = () => {
         if (isMobile && onMobileClose) {
             onMobileClose(); // Close mobile menu when nav item is clicked
@@ -79,6 +99,14 @@ const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
                         <User size={16} />
                         <span>{user.username}</span>
                         <span className="user-role">({user.role})</span>
+                        <button 
+                            onClick={handleQuickSwitch}
+                            disabled={isSwitching}
+                            className="quick-switch-btn"
+                            title={`Switch to ${user.username === 'admin' ? 'owner' : 'admin'}`}
+                        >
+                            <RefreshCw size={12} className={isSwitching ? 'spinning' : ''} />
+                        </button>
                     </div>
                 )}
             </div>
