@@ -34,10 +34,16 @@ const Login = () => {
     setIsLoading(true);
     setError('');
 
-    const result = await login(formData.username, formData.password);
-    
-    if (!result.success) {
-      setError(result.error);
+    try {
+      const result = await login(formData.username, formData.password);
+      
+      if (!result.success) {
+        setError(typeof result.error === 'string' ? result.error : 'Login failed');
+      }
+      // If successful, AuthContext will handle redirect
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An unexpected error occurred');
     }
     
     setIsLoading(false);

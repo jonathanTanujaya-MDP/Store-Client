@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
 import toast from 'react-hot-toast';
 
@@ -36,12 +35,23 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const response = await axios.post(`${API_ENDPOINTS.auth}/login`, {
-        username,
-        password
+      const response = await fetch(`${API_ENDPOINTS.auth}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
       });
 
-      const { token, user: userData } = response.data;
+      if (!response.ok) {
+        const error = await response.json();
+        const errorMessage = error.error || error.message || 'Login failed';
+        toast.error(errorMessage);
+        return { success: false, error: errorMessage };
+      }
+
+      const data = await response.json();
+      const { token, user: userData } = data;
 
       // Store in localStorage
       localStorage.setItem('authToken', token);
@@ -53,7 +63,8 @@ export const AuthProvider = ({ children }) => {
       toast.success(`Welcome back, ${userData.username}!`);
       return { success: true, user: userData };
     } catch (error) {
-      const errorMessage = error.response?.data?.error || error.message || 'Login failed';
+      console.error('Login error:', error);
+      const errorMessage = error.message || 'Network error occurred';
       toast.error(errorMessage);
       return { success: false, error: errorMessage };
     }
