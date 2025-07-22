@@ -91,44 +91,6 @@ export const AuthProvider = ({ children }) => {
     toast.info('Logged out successfully');
   };
 
-  const quickSwitch = async (username, password) => {
-    try {
-      setIsLoading(true);
-      
-      const response = await fetch(`${API_ENDPOINTS.auth}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || error.message || 'Switch failed');
-      }
-
-      const data = await response.json();
-      const { token, user: userData } = data;
-
-      // Update localStorage
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('userData', JSON.stringify(userData));
-      
-      // Update state
-      setUser(userData);
-      
-      toast.success(`Switched to ${userData.role}: ${userData.username}`);
-      return { success: true, user: userData };
-    } catch (error) {
-      console.error('Quick switch error:', error);
-      toast.error(error.message || 'Failed to switch account');
-      return { success: false, error: error.message };
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const isAuthenticated = () => {
     return !!user && !!localStorage.getItem('authToken');
   };
@@ -137,7 +99,6 @@ export const AuthProvider = ({ children }) => {
     user,
     login,
     logout,
-    quickSwitch,
     isAuthenticated,
     isLoading
   };

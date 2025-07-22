@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Home, Package, ShoppingCart, BarChart2, Bell, PlusCircle, RotateCcw, LogOut, User, UserCheck } from 'lucide-react';
+import { Home, Package, ShoppingCart, BarChart2, Bell, PlusCircle, RotateCcw, LogOut, User } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
 import { useUIScale } from '../context/UIScaleContext';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -9,8 +9,7 @@ import './Sidebar.css';
 const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
     const { lowStockCount } = useProducts();
     const { scaleFactor, setScaleFactor } = useUIScale();
-    const { user, logout, quickSwitch, isLoading } = useAuth();
-    const [showQuickSwitch, setShowQuickSwitch] = useState(false);
+    const { user, logout } = useAuth();
 
     const sidebarRef = useRef(null);
     const [sidebarWidth, setSidebarWidth] = useState(240);
@@ -47,16 +46,6 @@ const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
         logout();
         if (isMobile && onMobileClose) {
             onMobileClose(); // Close mobile menu
-        }
-    };
-
-    const handleQuickSwitch = async () => {
-        const targetAccount = user?.role === 'admin' ? 'owner' : 'admin';
-        const password = 'password'; // Since both accounts use the same password
-        
-        const result = await quickSwitch(targetAccount, password);
-        if (result.success) {
-            setShowQuickSwitch(false);
         }
     };
 
@@ -124,24 +113,10 @@ const Sidebar = ({ isMobileOpen = false, onMobileClose, isMobile = false }) => {
                 </Link>
                 <div className="sidebar-divider"></div>
                 
-                {/* User Profile & Quick Switch */}
-                <div className="sidebar-user-section">
-                    <div className="sidebar-user-info">
-                        <User className="sidebar-icon" />
-                        <span>{user?.username} ({user?.role})</span>
-                    </div>
-                    
-                    <button 
-                        onClick={handleQuickSwitch}
-                        className="sidebar-quick-switch-btn"
-                        disabled={isLoading}
-                        title={`Switch to ${user?.role === 'admin' ? 'owner' : 'admin'}`}
-                    >
-                        <UserCheck className="sidebar-icon" />
-                        <span>
-                            {isLoading ? 'Switching...' : `Switch to ${user?.role === 'admin' ? 'Owner' : 'Admin'}`}
-                        </span>
-                    </button>
+                {/* User Info Label Only */}
+                <div className="sidebar-user-info">
+                    <User className="sidebar-icon" />
+                    <span>{user?.username} ({user?.role})</span>
                 </div>
                 
                 <div className="sidebar-divider"></div>
